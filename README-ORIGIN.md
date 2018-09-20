@@ -1,6 +1,6 @@
 # d3-geo
 
-地图投影有时用点转换实现。例如，球形墨卡托（译者注：球形墨卡托是将地球模拟为球形进行投影，常用于Web）：
+Map projections are sometimes implemented as point transformations. For instance, spherical Mercator:
 
 ```js
 function mercator(x, y) {
@@ -8,24 +8,21 @@ function mercator(x, y) {
 }
 ```
 
-如果几何体由无限个连续的点表示，这将是一种合理的*数学*方法。然而，计算机没有无限的内存，所以我们必须使用离散的几何体，如多边形和折线！
+This is a reasonable *mathematical* approach if your geometry consists of continuous, infinite point sets. Yet computers do not have infinite memory, so we must instead work with discrete geometry such as polygons and polylines!
 
-离散几何体使得从球体投影到平面变得更加困难。球面上的多边形的边缘是[测地线](https://en.wikipedia.org/wiki/Geodesic)（大圆的一段圆弧），而不是直线。除了[gnomonic](#geoGnomonic)之外的所有地图投影中测地线投影到平面都是曲线，因此精确投影需要沿每个弧插值。D3使用受[矢量曲线数据压缩算法](https://bost.ocks.org/mike/simplify/)启发的[自适应采样](https://bl.ocks.org/mbostock/3795544)来平衡准确性和性能。
+Discrete geometry makes the challenge of projecting from the sphere to the plane much harder. The edges of a spherical polygon are [geodesics](https://en.wikipedia.org/wiki/Geodesic) (segments of great circles), not straight lines. Projected to the plane, geodesics are curves in all map projections except [gnomonic](#geoGnomonic), and thus accurate projection requires interpolation along each arc. D3 uses [adaptive sampling](https://bl.ocks.org/mbostock/3795544) inspired by a popular [line simplification method](https://bost.ocks.org/mike/simplify/) to balance accuracy and performance.
 
+The projection of polygons and polylines must also deal with the topological differences between the sphere and the plane. Some projections require cutting geometry that [crosses the antimeridian](https://bl.ocks.org/mbostock/3788999), while others require [clipping geometry to a great circle](https://bl.ocks.org/mbostock/3021474).
 
-多边形和折线的投影还必须处理球体和平面之间的拓扑差异。一些投影需要切割几何体[穿过反面子午线](https://bl.ocks.org/mbostock/3788999)的部分，其他的需要[剪切几何体到大圆](https://bl.ocks.org/mbostock/3021474)。
+Spherical polygons also require a [winding order convention](https://bl.ocks.org/mbostock/a7bdfeb041e850799a8d3dce4d8c50c8) to determine which side of the polygon is the inside: the exterior ring for polygons smaller than a hemisphere must be clockwise, while the exterior ring for polygons [larger than a hemisphere](https://bl.ocks.org/mbostock/6713736) must be anticlockwise. Interior rings representing holes must use the opposite winding order of their exterior ring. This winding order convention is also used by [TopoJSON](https://github.com/topojson) and [ESRI shapefiles](https://github.com/mbostock/shapefile); however, it is the **opposite** convention of GeoJSON’s [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.6). (Also note that standard GeoJSON WGS84 uses planar equirectangular coordinates, not spherical coordinates, and thus may require [stitching](https://github.com/d3/d3-geo-projection/blob/master/README.md#geostitch) to remove antimeridian cuts.)
 
-球面多边形还需要一个[绕序约定](https://bl.ocks.org/mbostock/a7bdfeb041e850799a8d3dce4d8c50c8)来确定多边形的哪一边是内部：小于半球的多边形的外环必须是顺时针的，而[大于半球](https://bl.ocks.org/mbostock/6713736)的多边形的外环必须是逆时针的。代表孔的内圈必须使用其外圈的相反的绕序。此卷绕顺序约定[TopoJSON](https://github.com/topojson)和[ESRI shapefiles](https://github.com/mbostock/shapefile)也在使用；但是，它与GeoJSON的[RFC 7946](https://tools.ietf.org/html/rfc7946#section-3.1.6)**相反**。（另请注意，标准GeoJSON WGS84使用平面等距（equirectangular）坐标，而不是球面坐标，因此可能需要[拼接](https://github.com/d3/d3-geo-projection/blob/master/README.md#geostitch)去除反面子午线切口。）
+D3’s approach affords great expressiveness: you can choose the right projection, and the right aspect, for your data. D3 supports a wide variety of common and [unusual map projections](https://github.com/d3/d3-geo-projection). For more, see Part 2 of [The Toolmaker’s Guide](https://vimeo.com/106198518#t=20m0s).
 
-D3的方法提供了极好的表现力：您可以为数据选择想要的投影和外观。D3支持各种常见和[不常见的地图投影](https://github.com/d3/d3-geo-projection)。更多有关信息，请参阅[The Toolmaker’s Guide](https://vimeo.com/106198518#t=20m0s)的第2部分。
+D3 uses [GeoJSON](http://geojson.org/geojson-spec.html) to represent geographic features in JavaScript. (See also [TopoJSON](https://github.com/mbostock/topojson), an extension of GeoJSON that is significantly more compact and encodes topology.) To convert shapefiles to GeoJSON, use [shp2geo](https://github.com/mbostock/shapefile/blob/master/README.md#shp2geo), part of the [shapefile package](https://github.com/mbostock/shapefile). See [Command-Line Cartography](https://medium.com/@mbostock/command-line-cartography-part-1-897aa8f8ca2c) for an introduction to d3-geo and related tools.
 
-D3使用[GeoJSON](http://geojson.org/geojson-spec.html)在JavaScript中表示地理要素。（另请参阅可以显著压缩并按拓扑结构编码GeoJSON的扩展[TopoJSON](https://github.com/mbostock/topojson)，它更加紧凑并对拓扑进行编码。）要将shapefile转换为GeoJSON，请使用[shp2geo](https://github.com/mbostock/shapefile/blob/master/README.md#shp2geo)，它是[shapefile package](https://github.com/mbostock/shapefile)的一部分。有关d3-geo和相关工具的介绍，请参阅[命令行地图制图](https://medium.com/@mbostock/command-line-cartography-part-1-897aa8f8ca2c)。
+## Installing
 
-
-## 安装
-
-如果您使用NPM， npm install d3-geo。否则，请下载最新版本。您也可以直接从d3js.org加载，作为独立库或作为D3 4.0的一部分。支持AMD，CommonJS和vanilla环境。在香草中，d3全球出口：
-NPM安装, `npm install d3-geo`，或者[下载最新版本](https://github.com/d3/d3-geo/releases/latest)。您也可以直接从[d3js.org](https://d3js.org)，或着作为[独立库](https://d3js.org/d3-geo.v1.min.js)，或者[D3 4.0](https://github.com/d3/d3)的一部分加载。d3-geo支持AMD、CommonJS、和原生（vanilla）环境。原生环境中使用`d3`作为入口：
+If you use NPM, `npm install d3-geo`. Otherwise, download the [latest release](https://github.com/d3/d3-geo/releases/latest). You can also load directly from [d3js.org](https://d3js.org), either as a [standalone library](https://d3js.org/d3-geo.v1.min.js) or as part of [D3 4.0](https://github.com/d3/d3). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3` global is exported:
 
 ```html
 <script src="https://d3js.org/d3-array.v1.min.js"></script>
@@ -37,7 +34,8 @@ var projection = d3.geoEqualEarth(),
 
 </script>
 ```
-[在浏览器中尝试使用d3-geo。](https://tonicdev.com/npm/d3-geo)
+
+[Try d3-geo in your browser.](https://tonicdev.com/npm/d3-geo)
 
 ## API Reference
 
