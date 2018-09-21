@@ -39,7 +39,7 @@ var projection = d3.geoEqualEarth(),
 ```
 [在浏览器中尝试使用d3-geo。](https://tonicdev.com/npm/d3-geo)
 
-## API Reference
+## API 参考
 
 * [Paths](#paths)
 * [Projections](#projections) ([Azimuthal](#azimuthal-projections), [Composite](#composite-projections), [Conic](#conic-projections), [Cylindrical](#cylindrical-projections))
@@ -51,30 +51,31 @@ var projection = d3.geoEqualEarth(),
 * [Clipping](#clipping)
 
 ### Paths
+地理路径生成器d3.geoPath类似于d3-shape中的形状生成器：给定GeoJSON几何或要素对象，它生成SVG路径数据字符串或呈现Canvas的路径。动态或交互的投影建议使用Canvas以提高性能。路径可以与投影或变换一起使用，也可以用于将平面几何体直接渲染到Canvas或SVG。
 
-The geographic path generator, [d3.geoPath](#geoPath), is similar to the shape generators in [d3-shape](https://github.com/d3/d3-shape): given a GeoJSON geometry or feature object, it generates an SVG path data string or [renders the path to a Canvas](https://bl.ocks.org/mbostock/3783604). Canvas is recommended for dynamic or interactive projections to improve performance. Paths can be used with [projections](#projections) or [transforms](#transforms), or they can be used to render planar geometry directly to Canvas or SVG.
+[d3.geoPath](#geoPath)是一个类似形状生成器[d3-shape](https://github.com/d3/d3-shape)的地理路径生成器：它可以由给定GeoJSON几何体或要素对象，它生成SVG路径数据字符串或[渲染Canvas的路径](https://bl.ocks.org/mbostock/3783604)。动态或交互的投影建议使用Canvas以提高性能。路径可以与[projections](#projections)或者[transforms](#transforms)一起使用，也可以将平面几何体直接渲染到Canvas或SVG。
 
 <a href="#geoPath" name="geoPath">#</a> d3.<b>geoPath</b>([<i>projection</i>[, <i>context</i>]]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-Creates a new geographic path generator with the default settings. If *projection* is specified, sets the [current projection](#path_projection). If *context* is specified, sets the [current context](#path_context).
+使用默认设置创建新的地理路径生成器。指定*projection*将调用[projection](#path_projection)设置当前投影，指定*context*将调用[context](#path_context)设置当前上下文。
 
 <a href="#_path" name="_path">#</a> <i>path</i>(<i>object</i>[, <i>arguments…</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-Renders the given *object*, which may be any GeoJSON feature or geometry object:
+渲染指定*object*，可以是任何GeoJSON要素或几何对象：
 
-* Point - a single position.
-* MultiPoint - an array of positions.
-* LineString - an array of positions forming a continuous line.
-* MultiLineString - an array of arrays of positions forming several lines.
-* Polygon - an array of arrays of positions forming a polygon (possibly with holes).
-* MultiPolygon - a multidimensional array of positions forming multiple polygons.
-* GeometryCollection - an array of geometry objects.
-* Feature - a feature containing one of the above geometry objects.
-* FeatureCollection - an array of feature objects.
+* Point - 单个位置。
+* MultiPoint - 位置数组。
+* LineString - 连续的线的位置数组。
+* MultiLineString - 多条线的位置二维数组。
+* Polygon - 多边形的位置二维数组 （也许有岛）。
+* MultiPolygon - 多个多边形的多维数组。
+* GeometryCollection - 几何对象的数组。
+* Feature - 要素是上面任意一种几何对象。
+* FeatureCollection - 要素的数组。
 
-The type *Sphere* is also supported, which is useful for rendering the outline of the globe; a sphere has no coordinates. Any additional *arguments* are passed along to the [pointRadius](#path_pointRadius) accessor.
+用于渲染球体轮廓的*Sphere*类型也支持，sphere没有坐标。额外的*arguments*沿着[pointRadius](#path_pointRadius)存取器传递。（原文：Any additional *arguments* are passed along to the [pointRadius](#path_pointRadius) accessor.）
 
-To display multiple features, combine them into a feature collection:
+将多种要素打包到要素集中进行展示：
 
 ```js
 svg.append("path")
@@ -82,7 +83,7 @@ svg.append("path")
     .attr("d", d3.geoPath());
 ```
 
-Or use multiple path elements:
+或者生成多个路径：（原文：Or use multiple path elements:）
 
 ```js
 svg.selectAll("path")
@@ -91,33 +92,34 @@ svg.selectAll("path")
     .attr("d", d3.geoPath());
 ```
 
-Separate path elements are typically slower than a single path element. However, distinct path elements are useful for styling and interaction (e.g., click or mouseover). Canvas rendering (see [*path*.context](#path_context)) is typically faster than SVG, but requires more effort to implement styling and interaction.
+每个元素独立通常比将元素组合慢。然而，每个元素独立对于添加样式和交互（例如，点击或鼠标悬停）是非常有用的。Canvas渲染（请参阅[*path*.context](#path_context)）通常比SVG更快，但添加样式和交互比SVG费劲。
 
 <a href="#path_area" name="path_area">#</a> <i>path</i>.<b>area</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/area.js "Source")
 
-Returns the projected planar area (typically in square pixels) for the specified GeoJSON *object*. Point, MultiPoint, LineString and MultiLineString geometries have zero area. For Polygon and MultiPolygon geometries, this method first computes the area of the exterior ring, and then subtracts the area of any interior holes. This method observes any clipping performed by the [projection](#path_projection); see [*projection*.clipAngle](#projection_clipAngle) and [*projection*.clipExtent](#projection_clipExtent). This is the planar equivalent of [d3.geoArea](#geoArea).
+返回指定GeoJSON *object*的平面投影区域（通常以正方形像素为单位）（原文：(typically in square pixels)）。Point，MultiPoint，LineString和MultiLineString这些几何体的区域为零。对于Polygon和MultiPolygon几何体，此方法首先计算外环的面积，然后减去岛的面积。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoArea](#geoArea)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoArea](#geoArea).）
 
 <a href="#path_bounds" name="path_bounds">#</a> <i>path</i>.<b>bounds</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/bounds.js "Source")
 
-Returns the projected planar bounding box (typically in pixels) for the specified GeoJSON *object*. The bounding box is represented by a two-dimensional array: \[\[*x₀*, *y₀*\], \[*x₁*, *y₁*\]\], where *x₀* is the minimum *x*-coordinate, *y₀* is the minimum *y*-coordinate, *x₁* is maximum *x*-coordinate, and *y₁* is the maximum *y*-coordinate. This is handy for, say, zooming in to a particular feature. (Note that in projected planar coordinates, the minimum latitude is typically the maximum *y*-value, and the maximum latitude is typically the minimum *y*-value.) This method observes any clipping performed by the [projection](#path_projection); see [*projection*.clipAngle](#projection_clipAngle) and [*projection*.clipExtent](#projection_clipExtent). This is the planar equivalent of [d3.geoBounds](#geoBounds).
+返回指定GeoJSON *object*的平面投影边界（通常以像素为单位）。边界框由二维数组表示：\[\[*x₀*, *y₀*\]， \[*x₁*, *y₁*\]\]，其中*x₀*是最小*x*坐标，*y₀*是最小*y*坐标，*x₁*是最大*x*坐标，*y₁*是最大*y*坐标。这对于缩放至一个特定要素非常方便。（注意，在投影平面坐标中，最小纬度通常是最大*y*值，最大纬度通常是最小*y*值。）该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoBounds](#geoBounds)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoBounds](#geoBounds).）
 
 <a href="#path_centroid" name="path_centroid">#</a> <i>path</i>.<b>centroid</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/centroid.js "Source")
 
-Returns the projected planar centroid (typically in pixels) for the specified GeoJSON *object*. This is handy for, say, labeling state or county boundaries, or displaying a symbol map. For example, a [noncontiguous cartogram](https://bl.ocks.org/mbostock/4055908) might scale each state around its centroid. This method observes any clipping performed by the [projection](#path_projection); see [*projection*.clipAngle](#projection_clipAngle) and [*projection*.clipExtent](#projection_clipExtent). This is the planar equivalent of [d3.geoCentroid](#geoCentroid).
+返回指定GeoJSON *object*的平面投影质心（通常以像素为单位）。这对于给省或市添加边界或地图符号化非常方便。例如，[非连续地图](https://bl.ocks.org/mbostock/4055908)需要围绕其质心缩放每个状态。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)，这和[d3.geoCentroid](#geoCentroid)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoCentroid](#geoCentroid).）
 
 <a href="#path_measure" name="path_measure">#</a> <i>path</i>.<b>measure</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/measure.js "Source")
 
-Returns the projected planar length (typically in pixels) for the specified GeoJSON *object*. Point and MultiPoint geometries have zero length. For Polygon and MultiPolygon geometries, this method computes the summed length of all rings. This method observes any clipping performed by the [projection](#path_projection); see [*projection*.clipAngle](#projection_clipAngle) and [*projection*.clipExtent](#projection_clipExtent). This is the planar equivalent of [d3.geoLength](#geoLength).
+返回指定GeoJSON *object*的平面投影返回指定GeoJSON 对象的投影平面长度（通常以像素为单位）。Point和MultiPoint几何体长度为零。对于Polygon和MultiPolygon几何体，此方法计算所有环的总长度。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoLength](#geoLength)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoLength](#geoLength).）
 
 <a href="#path_projection" name="path_projection">#</a> <i>path</i>.<b>projection</b>([<i>projection</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-If a *projection* is specified, sets the current projection to the specified projection. If *projection* is not specified, returns the current projection, which defaults to null. The null projection represents the identity transformation: the input geometry is not projected and is instead rendered directly in raw coordinates. This can be useful for fast rendering of [pre-projected geometry](https://bl.ocks.org/mbostock/5557726), or for fast rendering of the equirectangular projection.
+如果指定了*projection*，设置当前投影为指定的投影。如果未指定*projection*，则返回当前投影，默认为null。投影为空表示一种特定的转换（
+The null projection represents the identity transformation）：输入几何不进行投影直接按其原始坐标渲染。这种投影可以用于快速渲染[已经投影过的几何体](https://bl.ocks.org/mbostock/5557726)或快速渲染等距（equirectangular）投影。
 
-The given *projection* is typically one of D3’s built-in [geographic projections](#projections); however, any object that exposes a [*projection*.stream](#projection_stream) function can be used, enabling the use of [custom projections](https://bl.ocks.org/mbostock/5663666). See D3’s [transforms](#transforms) for more examples of arbitrary geometric transformations.
+给定的投影通常是D3的内置[geographic projections](#projections)之一；但是，任何对象暴露的[*projection*.stream](#projection_stream)都可以使用，从而可以使用[自定义投影](https://bl.ocks.org/mbostock/5663666)。参见D3的[transforms](#transforms)，获取更多任意几何变换的更多的例子。
 
 <a href="#path_context" name="path_context">#</a> <i>path</i>.<b>context</b>([<i>context</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-If *context* is specified, sets the current render context and returns the path generator. If the *context* is null, then the [path generator](#_path) will return an SVG path string; if the context is non-null, the path generator will instead call methods on the specified context to render geometry. The context must implement the following subset of the [CanvasRenderingContext2D API](https://www.w3.org/TR/2dcontext/#canvasrenderingcontext2d):
+如果指定了*context*，则设置当前渲染的上下文并返回[路径生成器](#_path)。如果上下文为null，则路径生成器将返回SVG路径字符串；如果上下文为非null，则路径生成器将调用指定上下文中的方法来渲染几何体。上下文必须实现[CanvasRenderingContext2D API](https://www.w3.org/TR/2dcontext/#canvasrenderingcontext2d)的子集：
 
 * *context*.beginPath()
 * *context*.moveTo(*x*, *y*)
@@ -125,11 +127,11 @@ If *context* is specified, sets the current render context and returns the path 
 * *context*.arc(*x*, *y*, *radius*, *startAngle*, *endAngle*)
 * *context*.closePath()
 
-If a *context* is not specified, returns the current render context which defaults to null.
+如果未指定*context*，则返回当前渲染的上下文，它的默认值为null。
 
 <a href="#path_pointRadius" name="path_pointRadius">#</a> <i>path</i>.<b>pointRadius</b>([<i>radius</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-If *radius* is specified, sets the radius used to display Point and MultiPoint geometries to the specified number. If *radius* is not specified, returns the current radius accessor, which defaults to 4.5. While the radius is commonly specified as a number constant, it may also be specified as a function which is computed per feature, being passed the any arguments passed to the [path generator](#_path). For example, if your GeoJSON data has additional properties, you might access those properties inside the radius function to vary the point size; alternatively, you could [d3.symbol](https://github.com/d3/d3-shape#symbols) and a [projection](#geoProjection) for greater flexibility.
+如果*radius*指定，设置用于显示Point和MultiPoint半径为指定值。如果未指定radius，则返回当前半径访问器，默认值为4.5。虽然半径通常被指定为数字常量，但它也可以被指定为为每个要素进行计算的函数，并将其传递给路径生成器（原文：being passed the any arguments passed to the [path generator](#_path)）。例如，如果您的GeoJSON数据具有附加属性，则可以访问这些属性在pointRadius指定的函数中来改变点大小；或者，您可以使用[d3.symbol](https://github.com/d3/d3-shape#symbols)和[projection](#geoProjection)这两种更加灵活的方式。
 
 ### Projections
 
