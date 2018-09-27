@@ -51,17 +51,17 @@ var projection = d3.geoEqualEarth(),
 * [Clipping](#clipping)
 
 ### Paths
-地理路径生成器d3.geoPath类似于d3-shape中的形状生成器：给定GeoJSON几何或要素对象，它生成SVG路径数据字符串或呈现Canvas的路径。动态或交互的投影建议使用Canvas以提高性能。路径可以与投影或变换一起使用，也可以用于将平面几何体直接渲染到Canvas或SVG。
+地理路径生成器d3.geoPath类似于d3-shape中的形状生成器：指定GeoJSON几何或要素对象，它生成SVG路径数据字符串或呈现Canvas的路径。动态或交互的投影建议使用Canvas以提高性能。路径可以与投影或变换一起使用，也可以用于将平面几何体直接渲染到Canvas或SVG。
 
-[d3.geoPath](#geoPath)是一个类似形状生成器[d3-shape](https://github.com/d3/d3-shape)的地理路径生成器：它可以由给定GeoJSON几何体或要素对象，它生成SVG路径数据字符串或[渲染Canvas的路径](https://bl.ocks.org/mbostock/3783604)。动态或交互的投影建议使用Canvas以提高性能。路径可以与[projections](#projections)或者[transforms](#transforms)一起使用，也可以将平面几何体直接渲染到Canvas或SVG。
+[d3.geoPath](#geoPath)是一个类似形状生成器[d3-shape](https://github.com/d3/d3-shape)的地理路径生成器：它可以由指定GeoJSON几何体或要素对象，它生成SVG路径数据字符串或[渲染Canvas的路径](https://bl.ocks.org/mbostock/3783604)。动态或交互的投影建议使用Canvas以提高性能。路径可以与[projections](#projections)或者[transforms](#transforms)一起使用，也可以将平面几何体直接渲染到Canvas或SVG。
 
 <a href="#geoPath" name="geoPath">#</a> d3.<b>geoPath</b>([<i>projection</i>[, <i>context</i>]]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-使用默认设置创建新的地理路径生成器。给定*projection*将调用[projection](#path_projection)设置当前投影，给定*context*将调用[context](#path_context)设置当前上下文。
+使用默认设置创建新的地理路径生成器。指定*projection*将调用[projection](#path_projection)设置当前投影，指定*context*将调用[context](#path_context)设置当前上下文。
 
 <a href="#_path" name="_path">#</a> <i>path</i>(<i>object</i>[, <i>arguments…</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-渲染给定*object*，可以是任何GeoJSON要素或几何对象：
+渲染指定*object*，可以是任何GeoJSON要素或几何对象：
 
 * Point - 单个位置。
 * MultiPoint - 位置数组。
@@ -96,30 +96,30 @@ svg.selectAll("path")
 
 <a href="#path_area" name="path_area">#</a> <i>path</i>.<b>area</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/area.js "Source")
 
-返回给定GeoJSON *object*的平面投影区域（通常以正方形像素为单位）（原文：(typically in square pixels)）。Point，MultiPoint，LineString和MultiLineString这些几何体的区域为零。对于Polygon和MultiPolygon几何体，此方法首先计算外环的面积，然后减去岛的面积。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoArea](#geoArea)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoArea](#geoArea).）
+返回指定GeoJSON *object*的平面投影区域（通常以正方形像素为单位）（原文：(typically in square pixels)）。Point，MultiPoint，LineString和MultiLineString这些几何体的区域为零。对于Polygon和MultiPolygon几何体，此方法首先计算外环的面积，然后减去岛的面积。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoArea](#geoArea)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoArea](#geoArea).）
 
 <a href="#path_bounds" name="path_bounds">#</a> <i>path</i>.<b>bounds</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/bounds.js "Source")
 
-返回给定GeoJSON *object*的平面投影边界（通常以像素为单位）。边界框由二维数组表示：\[\[*x₀*, *y₀*\]， \[*x₁*, *y₁*\]\]，其中*x₀*是最小*x*坐标，*y₀*是最小*y*坐标，*x₁*是最大*x*坐标，*y₁*是最大*y*坐标。这对于缩放至一个特定要素非常方便。（注意，在投影平面坐标中，最小纬度通常是最大*y*值，最大纬度通常是最小*y*值。）该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoBounds](#geoBounds)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoBounds](#geoBounds).）
+返回指定GeoJSON *object*的平面投影边界（通常以像素为单位）。边界框由二维数组表示：\[\[*x₀*, *y₀*\]， \[*x₁*, *y₁*\]\]，其中*x₀*是最小*x*坐标，*y₀*是最小*y*坐标，*x₁*是最大*x*坐标，*y₁*是最大*y*坐标。这对于缩放至一个特定要素非常方便。（注意，在投影平面坐标中，最小纬度通常是最大*y*值，最大纬度通常是最小*y*值。）该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoBounds](#geoBounds)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoBounds](#geoBounds).）
 
 <a href="#path_centroid" name="path_centroid">#</a> <i>path</i>.<b>centroid</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/centroid.js "Source")
 
-返回给定GeoJSON *object*的平面投影质心（通常以像素为单位）。这对于给省或市添加边界或地图符号化非常方便。例如，[非连续地图](https://bl.ocks.org/mbostock/4055908)需要围绕其质心缩放每个状态。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)，这和[d3.geoCentroid](#geoCentroid)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoCentroid](#geoCentroid).）
+返回指定GeoJSON *object*的平面投影质心（通常以像素为单位）。这对于给省或市添加边界或地图符号化非常方便。例如，[非连续地图](https://bl.ocks.org/mbostock/4055908)需要围绕其质心缩放每个状态。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)，这和[d3.geoCentroid](#geoCentroid)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoCentroid](#geoCentroid).）
 
 <a href="#path_measure" name="path_measure">#</a> <i>path</i>.<b>measure</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/measure.js "Source")
 
-返回给定GeoJSON *object*的平面投影返回给定GeoJSON 对象的投影平面长度（通常以像素为单位）。Point和MultiPoint几何体长度为零。对于Polygon和MultiPolygon几何体，此方法计算所有环的总长度。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoLength](#geoLength)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoLength](#geoLength).）
+返回指定GeoJSON *object*的平面投影返回指定GeoJSON 对象的投影平面长度（通常以像素为单位）。Point和MultiPoint几何体长度为零。对于Polygon和MultiPolygon几何体，此方法计算所有环的总长度。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoLength](#geoLength)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoLength](#geoLength).）
 
 <a href="#path_projection" name="path_projection">#</a> <i>path</i>.<b>projection</b>([<i>projection</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-如果给定了*projection*，设置当前投影为给定的投影。如果未给定*projection*，则返回当前投影，默认为null。投影为空表示一种特定的转换（
+如果指定了*projection*，设置当前投影为指定的投影。如果未指定*projection*，则返回当前投影，默认为null。投影为空表示一种特定的转换（
 The null projection represents the identity transformation）：输入几何不进行投影直接按其原始坐标渲染。这种投影可以用于快速渲染[已经投影过的几何体](https://bl.ocks.org/mbostock/5557726)或快速渲染等距（equirectangular）投影。
 
-给定的投影通常是D3的内置[geographic projections](#projections)之一；但是，任何对象暴露的[*projection*.stream](#projection_stream)都可以使用，从而可以使用[自定义投影](https://bl.ocks.org/mbostock/5663666)。参见D3的[transforms](#transforms)，获取更多任意几何变换的更多的例子。
+指定的投影通常是D3的内置[geographic projections](#projections)之一；但是，任何对象暴露的[*projection*.stream](#projection_stream)都可以使用，从而可以使用[自定义投影](https://bl.ocks.org/mbostock/5663666)。参见D3的[transforms](#transforms)，获取更多任意几何变换的更多的例子。
 
 <a href="#path_context" name="path_context">#</a> <i>path</i>.<b>context</b>([<i>context</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-如果给定了*context*，则设置当前渲染的上下文并返回[路径生成器](#_path)。如果上下文为null，则路径生成器将返回SVG路径字符串；如果上下文为非null，则路径生成器将调用给定上下文中的方法来渲染几何体。上下文必须实现[CanvasRenderingContext2D API](https://www.w3.org/TR/2dcontext/#canvasrenderingcontext2d)的子集：
+如果指定了*context*，则设置当前渲染的上下文并返回[路径生成器](#_path)。如果上下文为null，则路径生成器将返回SVG路径字符串；如果上下文为非null，则路径生成器将调用指定上下文中的方法来渲染几何体。上下文必须实现[CanvasRenderingContext2D API](https://www.w3.org/TR/2dcontext/#canvasrenderingcontext2d)的子集：
 
 * *context*.beginPath()
 * *context*.moveTo(*x*, *y*)
@@ -127,11 +127,11 @@ The null projection represents the identity transformation）：输入几何不�
 * *context*.arc(*x*, *y*, *radius*, *startAngle*, *endAngle*)
 * *context*.closePath()
 
-如果未给定*context*，则返回当前渲染的上下文，它的默认值为null。
+如果未指定*context*，则返回当前渲染的上下文，它的默认值为null。
 
 <a href="#path_pointRadius" name="path_pointRadius">#</a> <i>path</i>.<b>pointRadius</b>([<i>radius</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-如果*radius*给定，设置用于显示Point和MultiPoint半径为给定值。如果未给定radius，则返回当前半径访问器，默认值为4.5。虽然半径通常被给定为数字常量，但它也可以被给定为为每个要素进行计算的函数，并将其传递给路径生成器（原文：being passed the any arguments passed to the [path generator](#_path)）。例如，如果您的GeoJSON数据具有附加属性，则可以访问这些属性在pointRadius给定的函数中来改变点大小；或者，您可以使用[d3.symbol](https://github.com/d3/d3-shape#symbols)和[projection](#geoProjection)这两种更加灵活的方式。
+如果*radius*指定，设置用于显示Point和MultiPoint半径为指定值。如果未指定radius，则返回当前半径访问器，默认值为4.5。虽然半径通常被指定为数字常量，但它也可以被指定为为每个要素进行计算的函数，并将其传递给路径生成器（原文：being passed the any arguments passed to the [path generator](#_path)）。例如，如果您的GeoJSON数据具有附加属性，则可以访问这些属性在pointRadius指定的函数中来改变点大小；或者，您可以使用[d3.symbol](https://github.com/d3/d3-shape#symbols)和[projection](#geoProjection)这两种更加灵活的方式。
 
 ### Projections
 
@@ -146,21 +146,21 @@ The null projection represents the identity transformation）：输入几何不�
 
 <a href="#_projection" name="_projection">#</a> <i>projection</i>(<i>point</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-返回表示给定*point*的投影后的点的新数组\[*x*, *y*\]（通常以像素为单位）。给定*point*必须为以度为单位的双元素数组\[*longitude*, *latitude*\]。如果给定的*point*没有定义的投影位置，例如当该点位于该投影的剪切边界之外时，将返回null 。
+返回表示指定*point*的投影后的点的新数组\[*x*, *y*\]（通常以像素为单位）。指定*point*必须为以度为单位的双元素数组\[*longitude*, *latitude*\]。如果指定的*point*没有定义的投影位置，例如当该点位于该投影的剪切边界之外时，将返回null 。
 
 <a href="#projection_invert" name="projection_invert">#</a> <i>projection</i>.<b>invert</b>(<i>point</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-以度为单位返回一个以度为单位的新数组\[*longitude*, *latitude*\]，表示给定投影*point*的未投影点。该点必须给定为双元素数组\[*x*, *y*\]（通常以像素为单位）。如果给定的*point*没有定义的投影位置，例如当该点位于该投影的剪切边界之外时，将返回null 。
+以度为单位返回一个以度为单位的新数组\[*longitude*, *latitude*\]，表示指定投影*point*的未投影点。该点必须指定为双元素数组\[*x*, *y*\]（通常以像素为单位）。如果指定的*point*没有定义的投影位置，例如当该点位于该投影的剪切边界之外时，将返回null 。
 
 该方法仅定义在可逆投影上。
 
 <a href="#projection_stream" name="projection_stream">#</a> <i>projection</i>.<b>stream</b>(<i>stream</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-返回给定输出*stream*的[projection stream](#streams)。任何输入的几何体都是先投影然后成为输出流。（原文：Any input geometry is projected before being streamed to the output stream.）典型的投影涉及多个几何变换：输入几何体首先转换为弧度，在三个轴上旋转，剪切到小圆或沿着反面子午线，最后通过自适应重采样、缩放和平移投影到平面。
+返回指定输出*stream*的[projection stream](#streams)。任何输入的几何体都是先投影然后成为输出流。（原文：Any input geometry is projected before being streamed to the output stream.）典型的投影涉及多个几何变换：输入几何体首先转换为弧度，在三个轴上旋转，剪切到小圆或沿着反面子午线，最后通过自适应重采样、缩放和平移投影到平面。
 
 <a href="#projection_preclip" name="projection_preclip">#</a> <i>projection</i>.<b>preclip</b>([<i>preclip</i>])
 
-如果给定了*preclip*，则将投影的球面剪裁设置为给定的函数并返回投影。如果未给定*preclip*，则返回当前的球面剪裁功能（请参阅[preclip](#preclip)）。
+如果指定了*preclip*，则将投影的球面剪裁设置为指定的函数并返回投影。如果未指定*preclip*，则返回当前的球面剪裁功能（请参阅[preclip](#preclip)）。
 
 <a href="#projection_postclip" name="projection_postclip">#</a> <i>projection</i>.<b>postclip</b>([<i>postclip</i>])
 
@@ -168,45 +168,45 @@ The null projection represents the identity transformation）：输入几何不�
 
 <a href="#projection_clipAngle" name="projection_clipAngle">#</a> <i>projection</i>.<b>clipAngle</b>([<i>angle</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-如果指定了*angle*，则将投影的剪切圆半径设置为指定的以度为单位的角度并返回投影。（原文：If *angle* is specified, sets the projection’s clipping circle radius to the specified angle in degrees and returns the projection.）如果*angle*为null，则切换到[反面子午线切割](https://bl.ocks.org/mbostock/3788999)而不是小圆切割。如果未指定*angle*，则返回当前剪切角度，默认为null。小圆剪切独立于通过[*projection*.clipExtent](#projection_clipExtent)的视口剪切。
+如果指定了*angle*，则将投影的剪切圆半径设置为指定的以度为单位的角度并返回投影。（原文：If *angle* is specified, sets the projection’s clipping circle radius to the specified angle in degrees and returns the projection.）如果*angle*为null，则切换到[反面子午线切割](https://bl.ocks.org/mbostock/3788999)而不是小圆切割。如果未指定*angle*，则返回当前剪切角度，默认为null。小圆剪切独立于[*projection*.clipExtent](#projection_clipExtent)视口剪切。
 
 另见[*projection*.preclip](#projection_preclip)，[d3.geoClipAntimeridian](#geoClipAntimeridian)，[d3.geoClipCircle](#geoClipCircle)。
 
 <a href="#projection_clipExtent" name="projection_clipExtent">#</a> <i>projection</i>.<b>clipExtent</b>([<i>extent</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-If *extent* is specified, sets the projection’s viewport clip extent to the specified bounds in pixels and returns the projection. The *extent* bounds are specified as an array \[\[<i>x₀</i>, <i>y₀</i>\], \[<i>x₁</i>, <i>y₁</i>\]\], where <i>x₀</i> is the left-side of the viewport, <i>y₀</i> is the top, <i>x₁</i> is the right and <i>y₁</i> is the bottom. If *extent* is null, no viewport clipping is performed. If *extent* is not specified, returns the current viewport clip extent which defaults to null. Viewport clipping is independent of small-circle clipping via [*projection*.clipAngle](#projection_clipAngle).
+如果指定了*extent*，则将投影的的视口剪切范围设置为指定的以像素为单位的边界并返回投影。*extent*边界被指定为一个数组\[\[<i>x₀</i>, <i>y₀</i>\]，\[<i>x₁</i>, <i>y₁</i>\]\]，其中<i>x₀</i>是视口的左侧，<i>y₀</i>是视口的顶部，<i>x₁</i>是视口的右侧，<i>y₁</i>是视口的底部。如果*extent*为null，则不执行视口剪切。如果未指定*extent*，则返回当前视口剪切范围，默认为null。视口剪切独立于[*projection*.clipAngle](#projection_clipAngle)小圆剪切。
 
-See also [*projection*.postclip](#projection_postclip), [d3.geoClipRectangle](#geoClipRectangle).
+另请参见[*projection*.postclip](#projection_postclip)，[d3.geoClipRectangle](#geoClipRectangle)。
 
 <a href="#projection_scale" name="projection_scale">#</a> <i>projection</i>.<b>scale</b>([<i>scale</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-If *scale* is specified, sets the projection’s scale factor to the specified value and returns the projection. If *scale* is not specified, returns the current scale factor; the default scale is projection-specific. The scale factor corresponds linearly to the distance between projected points; however, absolute scale factors are not equivalent across projections.
+如果指定了*scale*，则将投影的缩放系数设置为指定值并返回投影。如果未指定*scale*，则返回当前缩放系数; 默认缩放系数是投影指定的。缩放系数与投影点之间的距离线性对应；但是，相同缩放系数在不同投影下的效果并不完全相同。（原文：however, absolute scale factors are not equivalent across projections.）
 
 <a href="#projection_translate" name="projection_translate">#</a> <i>projection</i>.<b>translate</b>([<i>translate</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-If *translate* is specified, sets the projection’s translation offset to the specified two-element array [<i>t<sub>x</sub></i>, <i>t<sub>y</sub></i>] and returns the projection. If *translate* is not specified, returns the current translation offset which defaults to [480, 250]. The translation offset determines the pixel coordinates of the projection’s [center](#projection_center). The default translation offset places ⟨0°,0°⟩ at the center of a 960×500 area.
+如果指定了*translate*，则将投影的平移距离设置为指定的双元素数组[<i>t<sub>x</sub></i>, <i>t<sub>y</sub></i>]并返回投影。如果未指定*translate*，则返回当前的平移距离，默认为[480,250]。平移距离确定投影的[center](#projection_center)的像素坐标。默认平移距离将⟨0°,0°⟩放置在960×500区域的中心。
 
 <a href="#projection_center" name="projection_center">#</a> <i>projection</i>.<b>center</b>([<i>center</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-If *center* is specified, sets the projection’s center to the specified *center*, a two-element array of longitude and latitude in degrees and returns the projection. If *center* is not specified, returns the current center, which defaults to ⟨0°,0°⟩.
+如果指定了*center*，则将投影的中心设置为指定的以度为单位的经度和纬度的双元素数组*center*，并返回投影。如果未指定*center*，则返回当前中心，默认为⟨0°，0°⟩。
 
 <a href="#projection_angle" name="projection_angle">#</a> <i>projection</i>.<b>angle</b>([<i>angle</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-If *angle* is specified, sets the projection’s post-projection planar rotation angle to the specified *angle* in degrees and returns the projection. If *angle* is not specified, returns the projection’s current angle, which defaults to 0°. Note that it may be faster to rotate during rendering (e.g., using [*context*.rotate](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/rotate)) rather than during projection.
+如果指定了*angle*，则将投影的投影后平面旋转角度设置为指定的以度为单位的*angle*并返回投影。如果未指定*angle*，则返回投影的当前角度，默认为0°。注意，在渲染期间旋转（例如，使用[*context*.rotate](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/rotate)）一般比投影期间旋转更快。
 
 <a href="#projection_rotate" name="projection_rotate">#</a> <i>projection</i>.<b>rotate</b>([<i>angles</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-If *rotation* is specified, sets the projection’s [three-axis spherical rotation](https://bl.ocks.org/mbostock/4282586) to the specified *angles*, which must be a two- or three-element array of numbers [*lambda*, *phi*, *gamma*] specifying the rotation angles in degrees about [each spherical axis](https://bl.ocks.org/mbostock/4282586). (These correspond to [yaw, pitch and roll](http://en.wikipedia.org/wiki/Aircraft_principal_axes).) If the rotation angle *gamma* is omitted, it defaults to 0. See also [d3.geoRotation](#geoRotation). If *rotation* is not specified, returns the current rotation which defaults [0, 0, 0].
+如果指定了*rotation*，则将投影的[球面旋转的三个轴](https://bl.ocks.org/mbostock/4282586)设置为指定的*angles*，该角度必须是两个或三个元素的数字数组[*lambda*, *phi*, *gamma*]，指定围绕[球面旋转的三个轴](https://bl.ocks.org/mbostock/4282586)的旋转角度。（和姿态角[yaw, pitch and roll](http://en.wikipedia.org/wiki/Aircraft_principal_axes)对应）如果省略旋转角度*gamma*，则默认为0.另请参阅[d3.geoRotation](#geoRotation)。如果未指定*rotation*，则返回当前旋转角度，默认为[0,0,0]。
 
 <a href="#projection_precision" name="projection_precision">#</a> <i>projection</i>.<b>precision</b>([<i>precision</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-If *precision* is specified, sets the threshold for the projection’s [adaptive resampling](https://bl.ocks.org/mbostock/3795544) to the specified value in pixels and returns the projection. This value corresponds to the [Douglas–Peucker](http://en.wikipedia.org/wiki/Ramer–Douglas–Peucker_algorithm) distance. If *precision* is not specified, returns the projection’s current resampling precision which defaults to √0.5 ≅ 0.70710…
+如果指定了*precision*，则将投影的[自适应重采样](https://bl.ocks.org/mbostock/3795544)的阈值设置为指定的以像素为单位值并返回投影。该值对应于[Douglas–Peucker](http://en.wikipedia.org/wiki/Ramer–Douglas–Peucker_algorithm)距离。如果未指定*precision*，则返回投影的当前重采样精度，默认为√0.5 ≅ 0.70710…
 
 <a href="#projection_fitExtent" name="projection_fitExtent">#</a> <i>projection</i>.<b>fitExtent</b>(<i>extent</i>, <i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-Sets the projection’s [scale](#projection_scale) and [translate](#projection_translate) to fit the specified GeoJSON *object* in the center of the given *extent*. The extent is specified as an array \[\[x₀, y₀\], \[x₁, y₁\]\], where x₀ is the left side of the bounding box, y₀ is the top, x₁ is the right and y₁ is the bottom. Returns the projection.
+设置投影的[scale](#projection_scale)和[translate](#projection_translate)使得指定的GeoJSON*object*从中心铺满指定的*extent*。该范围指定为数组\[\[x₀, y₀\], \[x₁, y₁\]\]，其中x₀是边界框的左边，y₀是顶部，x₁是右边，y₁是底部。返回投影。
 
-For example, to scale and translate the [New Jersey State Plane projection](https://bl.ocks.org/mbostock/5126418) to fit a GeoJSON object *nj* in the center of a 960×500 bounding box with 20 pixels of padding on each side:
+例如，缩放和平移[新泽西州平面投影](https://bl.ocks.org/mbostock/5126418)以使GeoJSON对象*nj*从中心铺满960×500的边界框，每边有20个像素的填充：
 
 ```js
 var projection = d3.geoTransverseMercator()
@@ -214,11 +214,11 @@ var projection = d3.geoTransverseMercator()
     .fitExtent([[20, 20], [940, 480]], nj);
 ```
 
-Any [clip extent](#projection_clipExtent) is ignored when determining the new scale and translate. The [precision](#projection_precision) used to compute the bounding box of the given *object* is computed at an effective scale of 150.
+确定新缩放和平移时，将忽略[clip extent](#projection_clipExtent)。[precision](#projection_precision)用于计算由150缩放计算过的指定的*object*的外接矩形。（原文：The [precision](#projection_precision) used to compute the bounding box of the given *object* is computed at an effective scale of 150.）
 
 <a href="#projection_fitSize" name="projection_fitSize">#</a> <i>projection</i>.<b>fitSize</b>(<i>size</i>, <i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-A convenience method for [*projection*.fitExtent](#projection_fitExtent) where the top-left corner of the extent is [0, 0]. The following two statements are equivalent:
+[*projection*.fitExtent](#projection_fitExtent)的便捷方法，其中范围的左上角是[0,0]。以下两个语句是等效的：
 
 ```js
 projection.fitExtent([[0, 0], [width, height]], object);
@@ -227,11 +227,11 @@ projection.fitSize([width, height], object);
 
 <a href="#projection_fitWidth" name="projection_fitWidth">#</a> <i>projection</i>.<b>fitWidth</b>(<i>width</i>, <i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-A convenience method for [*projection*.fitSize](#projection_fitSize) where the height is automatically chosen from the aspect ratio of *object* and the given constraint on *width*.
+[*projection*.fitSize](#projection_fitSize)的便捷方法，其中高度自动由*object*的纵横比和指定的*width*计算。
 
 <a href="#projection_fitHeight" name="projection_fitHeight">#</a> <i>projection</i>.<b>fitHeight</b>(<i>height</i>, <i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-A convenience method for [*projection*.fitSize](#projection_fitSize) where the width is automatically chosen from the aspect ratio of *object* and the given contraint on *height*.
+[*projection*.fitSize](#projection_fitSize)的便捷方法，其中宽度自动由*object*的纵横比和指定的*height*计算。
 
 #### Azimuthal Projections
 
