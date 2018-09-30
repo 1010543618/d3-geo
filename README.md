@@ -21,10 +21,8 @@ D3的方法提供了极好的表现力：您可以为数据选择想要的投影
 
 D3使用[GeoJSON](http://geojson.org/geojson-spec.html)在JavaScript中表示地理要素。（另请参阅可以显著压缩并按拓扑结构编码GeoJSON的扩展[TopoJSON](https://github.com/mbostock/topojson)，它更加紧凑并对拓扑进行编码。）要将shapefile转换为GeoJSON，请使用[shp2geo](https://github.com/mbostock/shapefile/blob/master/README.md#shp2geo)，它是[shapefile package](https://github.com/mbostock/shapefile)的一部分。有关d3-geo和相关工具的介绍，请参阅[命令行地图制图](https://medium.com/@mbostock/command-line-cartography-part-1-897aa8f8ca2c)。
 
-
 ## 安装
 
-如果您使用NPM， npm install d3-geo。否则，请下载最新版本。您也可以直接从d3js.org加载，作为独立库或作为D3 4.0的一部分。支持AMD，CommonJS和vanilla环境。在香草中，d3全球出口：
 NPM安装, `npm install d3-geo`，或者[下载最新版本](https://github.com/d3/d3-geo/releases/latest)。您也可以直接从[d3js.org](https://d3js.org)，或着作为[独立库](https://d3js.org/d3-geo.v1.min.js)，或者[D3 4.0](https://github.com/d3/d3)的一部分加载。d3-geo支持AMD、CommonJS、和原生（vanilla）环境。原生环境中使用`d3`作为入口：
 
 ```html
@@ -51,9 +49,8 @@ var projection = d3.geoEqualEarth(),
 * [Clipping](#clipping)
 
 ### Paths
-地理路径生成器d3.geoPath类似于d3-shape中的形状生成器：指定GeoJSON几何或要素对象，它生成SVG路径数据字符串或呈现Canvas的路径。动态或交互的投影建议使用Canvas以提高性能。路径可以与投影或变换一起使用，也可以用于将平面几何体直接渲染到Canvas或SVG。
 
-[d3.geoPath](#geoPath)是一个类似形状生成器[d3-shape](https://github.com/d3/d3-shape)的地理路径生成器：它可以由指定GeoJSON几何体或要素对象，它生成SVG路径数据字符串或[渲染Canvas的路径](https://bl.ocks.org/mbostock/3783604)。动态或交互的投影建议使用Canvas以提高性能。路径可以与[projections](#projections)或者[transforms](#transforms)一起使用，也可以将平面几何体直接渲染到Canvas或SVG。
+[d3.geoPath](#geoPath)是一个类似形状生成器[d3-shape](https://github.com/d3/d3-shape)的地理路径生成器：它可以由指定GeoJSON几何体或要素对象生成SVG路径数据字符串或[渲染Canvas的路径](https://bl.ocks.org/mbostock/3783604)。动态或交互的投影建议使用Canvas以提高性能。路径可以与[projections](#projections)或者[transforms](#transforms)一起使用，也可以将平面几何体直接渲染到Canvas或SVG。
 
 <a href="#geoPath" name="geoPath">#</a> d3.<b>geoPath</b>([<i>projection</i>[, <i>context</i>]]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
@@ -63,11 +60,11 @@ var projection = d3.geoEqualEarth(),
 
 渲染指定*object*，可以是任何GeoJSON要素或几何对象：
 
-* Point - 单个位置。
-* MultiPoint - 位置数组。
-* LineString - 连续的线的位置数组。
-* MultiLineString - 多条线的位置二维数组。
-* Polygon - 多边形的位置二维数组 （也许有岛）。
+* Point - 单个点。
+* MultiPoint - 点数组。
+* LineString - 连续的线的点的数组。
+* MultiLineString - 多条线的点的二维数组。
+* Polygon - 多边形点的二维数组 （也许有岛）。
 * MultiPolygon - 多个多边形的多维数组。
 * GeometryCollection - 几何对象的数组。
 * Feature - 要素是上面任意一种几何对象。
@@ -75,7 +72,7 @@ var projection = d3.geoEqualEarth(),
 
 用于渲染球体轮廓的*Sphere*类型也支持，sphere没有坐标。额外的*arguments*沿着[pointRadius](#path_pointRadius)存取器传递。（原文：Any additional *arguments* are passed along to the [pointRadius](#path_pointRadius) accessor.）
 
-将多种要素打包到要素集中进行展示：
+将多个要素打包到要素集生成一个path进行展示：
 
 ```js
 svg.append("path")
@@ -83,7 +80,7 @@ svg.append("path")
     .attr("d", d3.geoPath());
 ```
 
-或者生成多个路径：（原文：Or use multiple path elements:）
+或者每个要素单独生成path进行展示：
 
 ```js
 svg.selectAll("path")
@@ -92,23 +89,23 @@ svg.selectAll("path")
     .attr("d", d3.geoPath());
 ```
 
-每个元素独立通常比将元素组合慢。然而，每个元素独立对于添加样式和交互（例如，点击或鼠标悬停）是非常有用的。Canvas渲染（请参阅[*path*.context](#path_context)）通常比SVG更快，但添加样式和交互比SVG费劲。
+每个要素单独生成路径通常比将要素组合慢。然而，每个要素独立对于添加样式和交互（例如，点击或鼠标悬停）是非常有用的。Canvas渲染（请参阅[*path*.context](#path_context)）通常比SVG更快，但添加样式和交互比SVG费劲。
 
 <a href="#path_area" name="path_area">#</a> <i>path</i>.<b>area</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/area.js "Source")
 
-返回指定GeoJSON *object*的平面投影区域（通常以正方形像素为单位）（原文：(typically in square pixels)）。Point，MultiPoint，LineString和MultiLineString这些几何体的区域为零。对于Polygon和MultiPolygon几何体，此方法首先计算外环的面积，然后减去岛的面积。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoArea](#geoArea)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoArea](#geoArea).）
+返回指定GeoJSON *object*的平面投影区域（通常以正方形像素为单位）。Point，MultiPoint，LineString和MultiLineString这些几何体的区域为零。对于Polygon和MultiPolygon几何体，此方法首先计算外环的面积，然后减去岛的面积。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这是[d3.geoArea](#geoArea)的平面等价方法。
 
 <a href="#path_bounds" name="path_bounds">#</a> <i>path</i>.<b>bounds</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/bounds.js "Source")
 
-返回指定GeoJSON *object*的平面投影边界（通常以像素为单位）。边界框由二维数组表示：\[\[*x₀*, *y₀*\]， \[*x₁*, *y₁*\]\]，其中*x₀*是最小*x*坐标，*y₀*是最小*y*坐标，*x₁*是最大*x*坐标，*y₁*是最大*y*坐标。这对于缩放至一个特定要素非常方便。（注意，在投影平面坐标中，最小纬度通常是最大*y*值，最大纬度通常是最小*y*值。）该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoBounds](#geoBounds)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoBounds](#geoBounds).）
+返回指定GeoJSON *object*的平面投影边界（通常以像素为单位）。边界框由二维数组表示：\[\[*x₀*, *y₀*\]， \[*x₁*, *y₁*\]\]，其中*x₀*是最小*x*坐标，*y₀*是最小*y*坐标，*x₁*是最大*x*坐标，*y₁*是最大*y*坐标。这对于缩放至一个特定要素非常方便。（注意，在投影平面坐标中，最小纬度通常是最大*y*值，最大纬度通常是最小*y*值。）该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这是[d3.geoBounds](#geoBounds)的平面等价方法。
 
 <a href="#path_centroid" name="path_centroid">#</a> <i>path</i>.<b>centroid</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/centroid.js "Source")
 
-返回指定GeoJSON *object*的平面投影质心（通常以像素为单位）。这对于给省或市添加边界或地图符号化非常方便。例如，[非连续地图](https://bl.ocks.org/mbostock/4055908)需要围绕其质心缩放每个状态。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)，这和[d3.geoCentroid](#geoCentroid)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoCentroid](#geoCentroid).）
+返回指定GeoJSON *object*的平面投影质心（通常以像素为单位）。这对于给省或市添加边界或地图符号化非常方便。例如，[非连续地图](https://bl.ocks.org/mbostock/4055908)需要围绕其质心缩放每个状态。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)，这是[d3.geoCentroid](#geoCentroid)的平面等价方法。
 
 <a href="#path_measure" name="path_measure">#</a> <i>path</i>.<b>measure</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/path/measure.js "Source")
 
-返回指定GeoJSON *object*的平面投影返回指定GeoJSON 对象的投影平面长度（通常以像素为单位）。Point和MultiPoint几何体长度为零。对于Polygon和MultiPolygon几何体，此方法计算所有环的总长度。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这和[d3.geoLength](#geoLength)获取到的地理坐标进行投影结果一样。（原文：This is the planar equivalent of [d3.geoLength](#geoLength).）
+返回指定GeoJSON *object*的平面投影返回指定GeoJSON 对象的投影平面长度（通常以像素为单位）。Point和MultiPoint几何体长度为零。对于Polygon和MultiPolygon几何体，此方法计算所有环的总长度。该方法遵守[projection](#path_projection)提供的任何裁剪（原文：This method observes any clipping performed by the [projection](#path_projection)），参见[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。这是[d3.geoLength](#geoLength)的平面等价方法。
 
 <a href="#path_projection" name="path_projection">#</a> <i>path</i>.<b>projection</b>([<i>projection</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
@@ -131,7 +128,7 @@ The null projection represents the identity transformation）：输入几何不�
 
 <a href="#path_pointRadius" name="path_pointRadius">#</a> <i>path</i>.<b>pointRadius</b>([<i>radius</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-如果*radius*指定，设置用于显示Point和MultiPoint半径为指定值。如果未指定radius，则返回当前半径访问器，默认值为4.5。虽然半径通常被指定为数字常量，但它也可以被指定为为每个要素进行计算的函数，并将其传递给路径生成器（原文：being passed the any arguments passed to the [path generator](#_path)）。例如，如果您的GeoJSON数据具有附加属性，则可以访问这些属性在pointRadius指定的函数中来改变点大小；或者，您可以使用[d3.symbol](https://github.com/d3/d3-shape#symbols)和[projection](#geoProjection)这两种更加灵活的方式。
+如果*radius*指定，设置用于显示Point和MultiPoint半径为指定值。如果未指定*radius*，则返回当前半径访问器，默认值为4.5。虽然半径通常被指定为数字常量，但它也可以被指定为为每个要素进行计算的函数，这个函数可以获取到[path generator](#_path)的全部参数（原文：being passed the any arguments passed to the [path generator](#_path)）。例如，如果您的GeoJSON数据具有附加属性，则可以访问这些属性在pointRadius指定的函数中来改变点大小；或者，您可以使用[d3.symbol](https://github.com/d3/d3-shape#symbols)和[projection](#geoProjection)这两种更加灵活的方式。
 
 ### Projections
 
@@ -233,44 +230,44 @@ projection.fitSize([width, height], object);
 
 [*projection*.fitSize](#projection_fitSize)的便捷方法，其中宽度自动由*object*的纵横比和指定的*height*计算。
 
-#### Azimuthal Projections
+#### 方位投影
 
-Azimuthal projections project the sphere directly onto a plane.
+方位投影将球体直接投影到平面上。
 
 <a href="#geoAzimuthalEqualArea" name="geoAzimuthalEqualArea">#</a> d3.<b>geoAzimuthalEqualArea</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/azimuthalEqualArea.js "Source")
 <br><a href="#geoAzimuthalEqualAreaRaw" name="geoAzimuthalEqualAreaRaw">#</a> d3.<b>geoAzimuthalEqualAreaRaw</b>
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/azimuthalEqualArea.png" width="480" height="250">](https://bl.ocks.org/mbostock/3757101)
 
-The azimuthal equal-area projection.
+等积方位投影。
 
 <a href="#geoAzimuthalEquidistant" name="geoAzimuthalEquidistant">#</a> d3.<b>geoAzimuthalEquidistant</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/azimuthalEquidistant.js "Source")
 <br><a href="#geoAzimuthalEquidistantRaw" name="geoAzimuthalEquidistantRaw">#</a> d3.<b>geoAzimuthalEquidistantRaw</b>
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/azimuthalEquidistant.png" width="480" height="250">](https://bl.ocks.org/mbostock/3757110)
 
-The azimuthal equidistant projection.
+等距方位投影。
 
 <a href="#geoGnomonic" name="geoGnomonic">#</a> d3.<b>geoGnomonic</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/gnomonic.js "Source")
 <br><a href="#geoGnomonicRaw" name="geoGnomonicRaw">#</a> d3.<b>geoGnomonicRaw</b>
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/gnomonic.png" width="480" height="250">](https://bl.ocks.org/mbostock/3757349)
 
-The gnomonic projection.
+gnomonic投影。
 
 <a href="#geoOrthographic" name="geoOrthographic">#</a> d3.<b>geoOrthographic</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/orthographic.js "Source")
 <br><a href="#geoOrthographicRaw" name="geoOrthographicRaw">#</a> d3.<b>geoOrthographicRaw</b>
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/orthographic.png" width="480" height="250">](https://bl.ocks.org/mbostock/3757125)
 
-The orthographic projection.
+正交投影。
 
 <a href="#geoStereographic" name="geoStereographic">#</a> d3.<b>geoStereographic</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/stereographic.js "Source")
 <br><a href="#geoStereographicRaw" name="geoStereographicRaw">#</a> d3.<b>geoStereographicRaw</b>
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/stereographic.png" width="480" height="250">](https://bl.ocks.org/mbostock/3757137)
 
-The stereographic projection.
+立体投影。
 
 #### Equal-Earth
 
@@ -281,104 +278,104 @@ The stereographic projection.
 
 The Equal Earth projection, by Bojan Šavrič _et al._, 2018.
 
-#### Composite Projections
+#### 复合投影
 
-Composite consist of several projections that are composed into a single display. The constituent projections have fixed clip, center and rotation, and thus composite projections do not support [*projection*.center](#projection_center), [*projection*.rotate](#projection_rotate), [*projection*.clipAngle](#projection_clipAngle), or [*projection*.clipExtent](#projection_clipExtent).
+复合投影由多个投影组成，这些投影进行组合显示到一张地图上。组成复合投影的投影的具有固定的剪切，中心和旋转，因此复合投影不支持[*projection*.center](#projection_center)、[*projection*.rotate](#projection_rotate)、[*projection*.clipAngle](#projection_clipAngle)和[*projection*.clipExtent](#projection_clipExtent)。
 
 <a href="#geoAlbersUsa" name="geoAlbersUsa">#</a> d3.<b>geoAlbersUsa</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/albersUsa.js "Source")
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/albersUsa.png" width="480" height="250">](https://bl.ocks.org/mbostock/4090848)
 
-This is a U.S.-centric composite projection of three [d3.geoConicEqualArea](#geoConicEqualArea) projections: [d3.geoAlbers](#geoAlbers) is used for the lower forty-eight states, and separate conic equal-area projections are used for Alaska and Hawaii. Note that the scale for Alaska is diminished: it is projected at 0.35× its true relative area. This diagram by Philippe Rivière illustrates how this projection uses two rectangular insets for Alaska and Hawaii:
+这是以美国为中心的三个[d3.geoConicEqualArea](#geoConicEqualArea)投影的复合投影：[d3.geoAlbers](#geoAlbers)用于低纬度的四十八个州（原文： [d3.geoAlbers](#geoAlbers) is used for the lower forty-eight states），并且单独使用等积圆锥投影阿拉斯加和夏威夷。请注意，阿拉斯加的比例缩小：预计为其真实面积的0.35倍。Philippe Rivière的这张图使用阿拉斯加和夏威夷的两个矩形插图说明了这个投影：
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/albersUsa-parameters.png" width="480" height="250">](https://bl.ocks.org/Fil/7723167596af40d9159be34ffbf8d36b)
 
-See [d3-composite-projections](http://geoexamples.com/d3-composite-projections/) for more examples.
+更多示例，请参阅[d3-composite-projections](http://geoexamples.com/d3-composite-projections/) 。
 
-#### Conic Projections
+#### 圆锥投影
 
-Conic projections project the sphere onto a cone, and then unroll the cone onto the plane. Conic projections have [two standard parallels](#conic_parallels).
+圆锥投影将球体投影到圆锥体上，然后将圆锥体展开到平面上。圆锥投影有[two standard parallels](#conic_parallels)。
 
 <a href="#conic_parallels" name="conic_parallels">#</a> <i>conic</i>.<b>parallels</b>([<i>parallels</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/conic.js "Source")
 
-The [two standard parallels](https://en.wikipedia.org/wiki/Map_projection#Conic) that define the map layout in conic projections.
+[two standard parallels](https://en.wikipedia.org/wiki/Map_projection#Conic)定义了圆锥投影的地图布局。
 
 <a href="#geoAlbers" name="geoAlbers">#</a> d3.<b>geoAlbers</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/albers.js "Source")
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/albers.png" width="480" height="250">](https://bl.ocks.org/mbostock/3734308)
 
-The Albers’ equal area-conic projection. This is a U.S.-centric configuration of [d3.geoConicEqualArea](#geoConicEqualArea).
+Albers的等积圆锥投影。这是以美国为中心的[d3.geoConicEqualArea](#geoConicEqualArea)配置。
 
 <a href="#geoConicConformal" name="geoConicConformal">#</a> d3.<b>geoConicConformal</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/conicConformal.js "Source")
 <br><a href="#geoConicConformalRaw" name="geoConicConformalRaw">#</a> d3.<b>geoConicConformalRaw</b>(<i>phi0</i>, <i>phi1</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/conicConformal.js "Source")
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/conicConformal.png" width="480" height="250">](https://bl.ocks.org/mbostock/3734321)
 
-The conic conformal projection. The parallels default to [30°, 30°] resulting in flat top. See also [*conic*.parallels](#conic_parallels).
+等角圆锥投影。默认平行线为[30°, 30°]，造成平顶。（原文：The parallels default to [30°, 30°] resulting in flat top.）另见[*conic*.parallels](#conic_parallels)。
 
 <a href="#geoConicEqualArea" name="geoConicEqualArea">#</a> d3.<b>geoConicEqualArea</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/conicEqualArea.js "Source")
 <br><a href="#geoConicEqualAreaRaw" name="geoConicEqualAreaRaw">#</a> d3.<b>geoConicEqualAreaRaw</b>(<i>phi0</i>, <i>phi1</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/conicEqualArea.js "Source")
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/conicEqualArea.png" width="480" height="250">](https://bl.ocks.org/mbostock/3734308)
 
-The Albers’ equal-area conic projection. See also [*conic*.parallels](#conic_parallels).
+Albers的等积圆锥投影。另见[*conic*.parallels](#conic_parallels)。
 
 <a href="#geoConicEquidistant" name="geoConicEquidistant">#</a> d3.<b>geoConicEquidistant</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/conicEquidistant.js "Source")
 <br><a href="#geoConicEquidistantRaw" name="geoConicEquidistantRaw">#</a> d3.<b>geoConicEquidistantRaw</b>(<i>phi0</i>, <i>phi1</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/conicEquidistant.js "Source")
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/conicEquidistant.png" width="480" height="250">](https://bl.ocks.org/mbostock/3734317)
 
-The conic equidistant projection. See also [*conic*.parallels](#conic_parallels).
+等距圆锥投影。另见[*conic*.parallels](#conic_parallels)。
 
-#### Cylindrical Projections
+#### 圆柱投影
 
-Cylindrical projections project the sphere onto a containing cylinder, and then unroll the cylinder onto the plane. [Pseudocylindrical projections](http://www.progonos.com/furuti/MapProj/Normal/ProjPCyl/projPCyl.html) are a generalization of cylindrical projections.
+圆柱投影将球体投射到圆柱体上，然后将圆柱体展开到平面上。[伪圆柱投影](http://www.progonos.com/furuti/MapProj/Normal/ProjPCyl/projPCyl.html)是圆柱投影的推广。
 
 <a href="#geoEquirectangular" name="geoEquirectangular">#</a> d3.<b>geoEquirectangular</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/equirectangular.js "Source")
 <br><a href="#geoEquirectangularRaw" name="geoEquirectangularRaw">#</a> d3.<b>geoEquirectangularRaw</b>
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/equirectangular.png" width="480" height="250">](https://bl.ocks.org/mbostock/3757119)
 
-The equirectangular (plate carrée) projection.
+等距（plate carrée）投影。
 
 <a href="#geoMercator" name="geoMercator">#</a> d3.<b>geoMercator</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/mercator.js "Source")
 <br><a href="#geoMercatorRaw" name="geoMercatorRaw">#</a> d3.<b>geoMercatorRaw</b>
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/mercator.png" width="480" height="250">](https://bl.ocks.org/mbostock/3757132)
 
-The spherical Mercator projection. Defines a default [*projection*.clipExtent](#projection_clipExtent) such that the world is projected to a square, clipped to approximately ±85° latitude.
+球形墨卡托投影。定义默认[*projection*.clipExtent](#projection_clipExtent)，使地球投影到一个正方形，剪裁到大约±85°纬度。
 
 <a href="#geoTransverseMercator" name="geoTransverseMercator">#</a> d3.<b>geoTransverseMercator</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/transverseMercator.js "Source")
 <br><a href="#geoTransverseMercatorRaw" name="geoTransverseMercatorRaw">#</a> d3.<b>geoTransverseMercatorRaw</b>
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/transverseMercator.png" width="480" height="250">](https://bl.ocks.org/mbostock/4695821)
 
-The transverse spherical Mercator projection. Defines a default [*projection*.clipExtent](#projection_clipExtent) such that the world is projected to a square, clipped to approximately ±85° latitude.
+横轴球墨卡托投影。定义[*projection*.clipExtent](#projection_clipExtent)，使世界投影到一个正方形，剪裁到大约±85°纬度。
 
 <a href="#geoNaturalEarth1" name="geoNaturalEarth1">#</a> d3.<b>geoNaturalEarth1</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/naturalEarth1.js "Source")
 <br><a href="#geoNaturalEarth1Raw" name="geoNaturalEarth1Raw">#</a> d3.<b>geoNaturalEarth1Raw</b>
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/naturalEarth1.png" width="480" height="250">](https://bl.ocks.org/mbostock/4479477)
 
-The [Natural Earth projection](http://www.shadedrelief.com/NE_proj/) is a pseudocylindrical projection designed by Tom Patterson. It is neither conformal nor equal-area, but appealing to the eye for small-scale maps of the whole world.
+[自然地球投影](http://www.shadedrelief.com/NE_proj/)是由Tom Patterson设计的伪圆柱投影。它既不等角也不等积，而是全世界的小比例地图。（原文：but appealing to the eye for small-scale maps of the whole world.）
 
-### Raw Projections
+### 原始投影
 
-Raw projections are point transformation functions that are used to implement custom projections; they typically passed to [d3.geoProjection](#geoProjection) or [d3.geoProjectionMutator](#geoProjectionMutator). They are exposed here to facilitate the derivation of related projections. Raw projections take spherical coordinates \[*lambda*, *phi*\] in radians (not degrees!) and return a point \[*x*, *y*\], typically in the unit square centered around the origin.
+原始投影是用于实现自定义投影的点变换函数；它们通常传递给[d3.geoProjection](#geoProjection)或[d3.geoProjectionMutator](#geoProjectionMutator)。暴露出来原始投影用来衍生相关投影。原始投影以弧度（不是角度！）取球面坐标\[*lambda*, *phi*\]并返回点\[*x*, *y*\]，通常在以原点为中心的单位正方形中。（原文：typically in the unit square centered around the origin.）
 
 <a href="#_project" name="_project">#</a> <i>project</i>(<i>lambda</i>, <i>phi</i>)
 
-Projects the specified point [<i>lambda</i>, <i>phi</i>] in radians, returning a new point \[*x*, *y*\] in unitless coordinates.
+投影以弧度表示的指定点[<i>lambda</i>, <i>phi</i>]，在无单位坐标中返回新点\[*x*, *y*\]。
 
 <a href="#project_invert" name="project_invert">#</a> <i>project</i>.<b>invert</b>(<i>x</i>, <i>y</i>)
 
-The inverse of [*project*](#_project).
+[*project*](#_project)的逆。
 
 <a href="#geoProjection" name="geoProjection">#</a> d3.<b>geoProjection</b>(<i>project</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-Constructs a new projection from the specified [raw projection](#_project), *project*. The *project* function takes the *longitude* and *latitude* of a given point in [radians](http://mathworld.wolfram.com/Radian.html), often referred to as *lambda* (λ) and *phi* (φ), and returns a two-element array \[*x*, *y*\] representing its unit projection. The *project* function does not need to scale or translate the point, as these are applied automatically by [*projection*.scale](#projection_scale), [*projection*.translate](#projection_translate), and [*projection*.center](#projection_center). Likewise, the *project* function does not need to perform any spherical rotation, as [*projection*.rotate](#projection_rotate) is applied prior to projection.
+构建一个新投影从指定[原始投影](#_project)的*project*。该*project*函数采用以[弧度](http://mathworld.wolfram.com/Radian.html)表示的*longitude*和*latitude*，通常被称为*lambda* (λ)和*phi* (φ)，并返回数组\[*x*, *y*\]表示其单元投影。（原文：and returns a two-element array \[*x*, *y*\] representing its unit projection.）*project*函数不需要缩放和平移这个点，因为会自动应用[*projection*.scale](#projection_scale)、[*projection*.translate](#projection_translate)和[*projection*.center](#projection_center)。同样，*project*函数不需要执行任何球面旋转，因为在投影之前已经应用[*projection*.rotate](#projection_rotate)。
 
-For example, a spherical Mercator projection can be implemented as:
+例如，球形墨卡托投影可以这样实现：
 
 ```js
 var mercator = d3.geoProjection(function(x, y) {
@@ -386,11 +383,11 @@ var mercator = d3.geoProjection(function(x, y) {
 });
 ```
 
-If the *project* function exposes an *invert* method, the returned projection will also expose [*projection*.invert](#projection_invert).
+如果指定的*project*函数暴露了*invert*方法，则返回的投影也会暴露[*projection*.invert](#projection_invert)。
 
 <a href="#geoProjectionMutator" name="geoProjectionMutator">#</a> d3.<b>geoProjectionMutator</b>(<i>factory</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-Constructs a new projection from the specified [raw projection](#_project) *factory* and returns a *mutate* function to call whenever the raw projection changes. The *factory* must return a raw projection. The returned *mutate* function returns the wrapped projection. For example, a conic projection typically has two configurable parallels. A suitable *factory* function, such as [d3.geoConicEqualAreaRaw](#geoConicEqualAreaRaw), would have the form:
+构建一个新投影从指定[原始投影](#_project)的*factory*，并返回一个当原始投影发生变化时调用的*mutate*函数。指定的*factory*必须返回一个原始的投影。返回的*mutate*函数的返回值是包装后的投影。例如，圆锥投影通常具有两条可配置的平行线。一个合适的*factory*函数，如[d3.geoConicEqualAreaRaw](#geoConicEqualAreaRaw)，将具有以下形式：
 
 ```js
 // y0 and y1 represent two parallels
@@ -401,7 +398,7 @@ function conicFactory(phi0, phi1) {
 }
 ```
 
-Using d3.geoProjectionMutator, you can implement a standard projection that allows the parallels to be changed, reassigning the raw projection used internally by [d3.geoProjection](#geoProjection):
+使用d3.geoProjectionMutator可以实例化一个允许修改平行线的标准投影，使用[d3.geoProjection](#geoProjection)重新分配内部使用的原始投影：
 
 ```js
 function conicCustom() {
@@ -418,49 +415,49 @@ function conicCustom() {
 }
 ```
 
-When creating a mutable projection, the *mutate* function is typically not exposed.
+在创建可变投影时，通常不会公开*mutate*函数。
 
-### Spherical Math
+### 球面数学
 
 <a name="geoArea" href="#geoArea">#</a> d3.<b>geoArea</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/area.js "Source")
 
-Returns the spherical area of the specified GeoJSON *object* in [steradians](http://mathworld.wolfram.com/Steradian.html). This is the spherical equivalent of [*path*.area](#path_area).
+返回指定GeoJSON*object*的球面区域的[球面度](http://mathworld.wolfram.com/Steradian.html)（译者注：整个球的球面度为4）。这是[*path*.area](#path_area)的球面等价方法。
 
 <a name="geoBounds" href="#geoBounds">#</a> d3.<b>geoBounds</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/bounds.js "Source")
 
-Returns the [spherical bounding box](https://www.jasondavies.com/maps/bounds/) for the specified GeoJSON *object*. The bounding box is represented by a two-dimensional array: \[\[*left*, *bottom*], \[*right*, *top*\]\], where *left* is the minimum longitude, *bottom* is the minimum latitude, *right* is maximum longitude, and *top* is the maximum latitude. All coordinates are given in degrees. (Note that in projected planar coordinates, the minimum latitude is typically the maximum *y*-value, and the maximum latitude is typically the minimum *y*-value.) This is the spherical equivalent of [*path*.bounds](#path_bounds).
+返回指定GeoJSON*object*的[球面边界框](https://www.jasondavies.com/maps/bounds/)。边界框由二维数组表示：\[\[*left*, *bottom*\], \[*right*, *top*\]\]，其中left是最小经度，bottom是最小纬度，right是最大经度，top是最大纬度。所有坐标均以度为单位。（注意，在平面投影坐标中，最小纬度通常是最大*y*值，最大纬度通常是最小*y*值。）这是[*path*.bounds](#path_bounds)的球面等价方法。
 
 <a name="geoCentroid" href="#geoCentroid">#</a> d3.<b>geoCentroid</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/centroid.js "Source")
 
-Returns the spherical centroid of the specified GeoJSON *object*. This is the spherical equivalent of [*path*.centroid](#path_centroid).
+返回指定GeoJSON*object*的球面质心。这是[*path*.centroid](#path_centroid)的球面等价方法。
 
 <a name="geoDistance" href="#geoDistance">#</a> d3.<b>geoDistance</b>(<i>a</i>, <i>b</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/distance.js "Source")
 
-Returns the great-arc distance in [radians](http://mathworld.wolfram.com/Radian.html) between the two points *a* and *b*. Each point must be specified as a two-element array \[*longitude*, *latitude*\] in degrees. This is the spherical equivalent of [*path*.measure](#path_measure) given a LineString of two points.
+返回指定*a*和*b*两点之间以[弧度](http://mathworld.wolfram.com/Radian.html)表示的距离。必须将每个点指定为以度为单位的双元素数组\[*longitude*, *latitude*\]。这是平面上使用度[*path*.measure](#path_measure)测量两点线段长度的球面等价方法。（原文：This is the spherical equivalent of [*path*.measure](#path_measure) given a LineString of two points.）
 
 <a name="geoLength" href="#geoLength">#</a> d3.<b>geoLength</b>(<i>object</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/length.js "Source")
 
-Returns the great-arc length of the specified GeoJSON *object* in [radians](http://mathworld.wolfram.com/Radian.html). For polygons, returns the perimeter of the exterior ring plus that of any interior rings. This is the spherical equivalent of [*path*.measure](#path_measure).
+返回指定GeoJSON *object*之间以[弧度](http://mathworld.wolfram.com/Radian.html)表示的距离。以弧度形式返回指定GeoJSON 对象的大弧长度。对于多边形，返回外圈的周长加上全部岛的周长。这是平面上测量线段长度[*path*.measure](#path_measure)的球面等价方法。
 
 <a name="geoInterpolate" href="#geoInterpolate">#</a> d3.<b>geoInterpolate</b>(<i>a</i>, <i>b</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/interpolate.js "Source")
 
-Returns an interpolator function given two points *a* and *b*. Each point must be specified as a two-element array \[*longitude*, *latitude*\] in degrees. The returned interpolator function takes a single argument *t*, where *t* is a number ranging from 0 to 1; a value of 0 returns the point *a*, while a value of 1 returns the point *b*. Intermediate values interpolate from *a* to *b* along the great arc that passes through both *a* and *b*. If *a* and *b* are antipodes, an arbitrary great arc is chosen.
+返回指定两点*a*和*b*的插值函数。必须将每个点指定为以度为单位的双元素数组\[*longitude*, *latitude*\]。返回的插值函数带有一个参数*t*，其中*t*是0到1之间的数字; 值0返回点*a*，值1返回点*b*。沿着穿过*a*和*b*的大弧从*a*到*b*插值生成中间值。如果*a*和*b*是对跖点（译者注：[对跖点](https://en.wikipedia.org/wiki/Antipodes)地球同一直径的两个端点。），则选择任意大弧。
 
 <a name="geoContains" href="#geoContains">#</a> d3.<b>geoContains</b>(<i>object</i>, <i>point</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/contains.js "Source")
 
-Returns true if and only if the specified GeoJSON *object* contains the specified *point*, or false if the *object* does not contain the *point*. The point must be specified as a two-element array \[*longitude*, *latitude*\] in degrees. For Point and MultiPoint geometries, an exact test is used; for a Sphere, true is always returned; for other geometries, an epsilon threshold is applied.
+当且仅当指定GeoJSON *object*包含指定的*point*返回值true，否则返回假。必须将该点指定为以度为单位的双元素数组\[*longitude*, *latitude*\]。对于Point和MultiPoint几何体，使用精确测试；对于一个球体，总是返回true；对于其他几何体，使用epsilon阈值。
 
 <a name="geoRotation" href="#geoRotation">#</a> d3.<b>geoRotation</b>(<i>angles</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/rotation.js "Source")
 
-Returns a [rotation function](#_rotation) for the given *angles*, which must be a two- or three-element array of numbers [*lambda*, *phi*, *gamma*] specifying the rotation angles in degrees about [each spherical axis](https://bl.ocks.org/mbostock/4282586). (These correspond to [yaw, pitch and roll](http://en.wikipedia.org/wiki/Aircraft_principal_axes).) If the rotation angle *gamma* is omitted, it defaults to 0. See also [*projection*.rotate](#projection_rotate).
+如果指定了*rotation*，则将投影的[球面旋转的三个轴](https://bl.ocks.org/mbostock/4282586)设置为指定的*angles*，该角度必须是以度表示[球面旋转的三个轴](https://bl.ocks.org/mbostock/4282586)（和姿态角[yaw, pitch and roll](http://en.wikipedia.org/wiki/Aircraft_principal_axes)对应）的两个或三个元素的数字数组[*lambda*, *phi*, *gamma*]。如果省略旋转角度*gamma*，则默认为0.另请参阅[d3.geoRotation](#geoRotation)。
 
 <a name="_rotation" href="#_rotation">#</a> <i>rotation</i>(<i>point</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/rotation.js "Source")
 
-Returns a new array \[*longitude*, *latitude*\] in degrees representing the rotated point of the given *point*. The point must be specified as a two-element array \[*longitude*, *latitude*\] in degrees.
+以度为单位返回一个新数组\[*longitude*, *latitude*\]，表示指定*point*的旋转点。以度为单位返回指定*point*的选装新数组\[*longitude*, *latitude*\]。该点指定为以度为单位的双元素数组\[*longitude*, *latitude*\]。
 
 <a name="rotation_invert" href="#rotation_invert">#</a> <i>rotation</i>.<b>invert</b>(<i>point</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/rotation.js "Source")
 
-Returns a new array \[*longitude*, *latitude*\] in degrees representing the point of the given rotated *point*; the inverse of [*rotation*](#_rotation). The point must be specified as a two-element array \[*longitude*, *latitude*\] in degrees.
+以度为单位返回一个新的数组\[*longitude*, *latitude*\]，表示指定*point*的反转点；[*rotation*](#_rotation)的反转。（原文：the inverse of [*rotation*](#_rotation).）必须将该点指定为以度为单位的双元素数组\[*longitude*, *latitude*\]。
 
 ### Spherical Shapes
 
