@@ -459,21 +459,21 @@ function conicCustom() {
 
 以度为单位返回一个新的数组\[*longitude*, *latitude*\]，表示指定*point*的反转点；[*rotation*](#_rotation)的反转。（原文：the inverse of [*rotation*](#_rotation).）必须将该点指定为以度为单位的双元素数组\[*longitude*, *latitude*\]。
 
-### Spherical Shapes
+### （球体形状）Spherical Shapes
 
-To generate a [great arc](https://en.wikipedia.org/wiki/Great-circle_distance) (a segment of a great circle), simply pass a GeoJSON LineString geometry object to a [d3.geoPath](#geoPath). D3’s projections use great-arc interpolation for intermediate points, so there’s no need for a great arc shape generator.
+要生成一个[大弧](https://en.wikipedia.org/wiki/Great-circle_distance)（一个大圆的一部分），只需将GeoJSON LineString几何对象传递给[d3.geoPath](#geoPath)。D3的投影使用大弧插值生成中间点，因此不需要大弧形发生器。
 
 <a name="geoCircle" href="#geoCircle">#</a> d3.<b>geoCircle</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/circle.js "Source")
 
-Returns a new circle generator.
+返回一个新的圆生成器。
 
 <a name="_circle" href="#_circle">#</a> <i>circle</i>(<i>arguments…</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/circle.js "Source")
 
-Returns a new GeoJSON geometry object of type “Polygon” approximating a circle on the surface of a sphere, with the current [center](#circle_center), [radius](#circle_radius) and [precision](#circle_precision). Any *arguments* are passed to the accessors.
+返回一个新的类型为“Polygon”的GeoJSON几何对象，这个几何对象近似于球体表面上的圆，具有当前的[center](#circle_center)，[radius](#circle_radius)和[precision](#circle_precision)。*arguments*传递给访问器。（原文：Any *arguments* are passed to the accessors.）
 
 <a name="circle_center" href="#circle_center">#</a> <i>circle</i>.<b>center</b>([<i>center</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/circle.js "Source")
 
-If *center* is specified, sets the circle center to the specified point \[*longitude*, *latitude*\] in degrees, and returns this circle generator. The center may also be specified as a function; this function will be invoked whenever a circle is [generated](#_circle), being passed any arguments passed to the circle generator. If *center* is not specified, returns the current center accessor, which defaults to:
+如果指定*center*，设定圆心到指定的以度数为单位的点\[*longitude*, *latitude*\]，并返回该圆的生成器。中心也可以指定为函数；每当[生成](#_circle)一个圆时，将调用此函数，这个函数可以获取到圆生成器的全部参数。（原文：being passed any arguments passed to the circle generator.）如果未指定*center*，则返回当前的中心访问器，默认为：
 
 ```js
 function center() {
@@ -483,7 +483,7 @@ function center() {
 
 <a name="circle_radius" href="#circle_radius">#</a> <i>circle</i>.<b>radius</b>([<i>radius</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/circle.js "Source")
 
-If *radius* is specified, sets the circle radius to the specified angle in degrees, and returns this circle generator. The radius may also be specified as a function; this function will be invoked whenever a circle is [generated](#_circle), being passed any arguments passed to the circle generator. If *radius* is not specified, returns the current radius accessor, which defaults to:
+如果指定*radius*，设置圆半径为指定以度为单位的角度，并返回该圆生成器。半径也可以指定为函数；每当[生成](#_circle)一个圆时，将调用此函数，这个函数可以获取到圆生成器的全部参数。（原文：being passed any arguments passed to the circle generator.）如果未指定*radius*，则返回当前半径访问器，默认为：
 
 ```js
 function radius() {
@@ -493,7 +493,7 @@ function radius() {
 
 <a name="circle_precision" href="#circle_precision">#</a> <i>circle</i>.<b>precision</b>([<i>angle</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/circle.js "Source")
 
-If *precision* is specified, sets the circle precision to the specified angle in degrees, and returns this circle generator. The precision may also be specified as a function; this function will be invoked whenever a circle is [generated](#_circle), being passed any arguments passed to the circle generator. If *precision* is not specified, returns the current precision accessor, which defaults to:
+如果指定*precision* ，设置圆精度为指定以度为单位的角度，然后返回该圆发生器。精度也可以指定为函数；每当[生成](#_circle)一个圆时，将调用此函数，这个函数可以获取到圆生成器的全部参数。（原文：being passed any arguments passed to the circle generator.）如果未指定*precision*，则返回当前精度访问器，默认为：
 
 ```js
 function precision() {
@@ -501,57 +501,58 @@ function precision() {
 }
 ```
 
-Small circles do not follow great arcs and thus the generated polygon is only an approximation. Specifying a smaller precision angle improves the accuracy of the approximate polygon, but also increase the cost to generate and render it.
+小圆圈不遵循大弧，因此生成的多边形只是近似值。（原文：Small circles do not follow great arcs and thus the generated polygon is only an approximation.）指定角度精度为较小值可提高多边形近似的精度，但也会增加生成和渲染它的成本。
 
 <a name="geoGraticule" href="#geoGraticule">#</a> d3.<b>geoGraticule</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-Constructs a geometry generator for creating graticules: a uniform grid of [meridians](https://en.wikipedia.org/wiki/Meridian_\(geography\)) and [parallels](https://en.wikipedia.org/wiki/Circle_of_latitude) for showing projection distortion. The default graticule has meridians and parallels every 10° between ±80° latitude; for the polar regions, there are meridians every 90°.
+构造一个用于创建经纬网的几何生成器：展示变形的投影使用均匀的[经线](https://en.wikipedia.org/wiki/Meridian_\(geography\))和[纬线](https://en.wikipedia.org/wiki/Circle_of_latitude)。（原文：Constructs a geometry generator for creating graticules: a uniform grid of [经线](https://en.wikipedia.org/wiki/Meridian_\(geography\)) and [纬线圈](https://en.wikipedia.org/wiki/Circle_of_latitude) for showing projection distortion.）默认经纬网在有纬线，纬度±80°之间每隔10°有经线；对于极地地区，每隔90°有经线。
 
 <img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/graticule.png" width="480" height="360">
 
 <a name="_graticule" href="#_graticule">#</a> <i>graticule</i>() [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-Returns a GeoJSON MultiLineString geometry object representing all meridians and parallels for this graticule.
+返回表示此经纬网的所有经线和纬线的GeoJSON MultiLineString几何对象。
 
 <a name="graticule_lines" href="#graticule_lines">#</a> <i>graticule</i>.<b>lines</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-Returns an array of GeoJSON LineString geometry objects, one for each meridian or parallel for this graticule.
+返表示此经纬网的所有经线和纬线的GeoJSON LineString几何体对象的数组。（原文：
+Returns an array of GeoJSON LineString geometry objects, one for each meridian or parallel for this graticule.）
 
 <a name="graticule_outline" href="#graticule_outline">#</a> <i>graticule</i>.<b>outline</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-Returns a GeoJSON Polygon geometry object representing the outline of this graticule, i.e. along the meridians and parallels defining its extent.
+返回表示此经纬网轮廓的GeoJSON Polygon几何体对象，即沿着经线和纬线定义的范围。
 
 <a name="graticule_extent" href="#graticule_extent">#</a> <i>graticule</i>.<b>extent</b>([<i>extent</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-If *extent* is specified, sets the major and minor extents of this graticule. If *extent* is not specified, returns the current minor extent, which defaults to ⟨⟨-180°, -80° - ε⟩, ⟨180°, 80° + ε⟩⟩.
+如果指定*extent*，设置此经纬网的主范围和次范围。如果未指定*extent*，返回当前次范围，默认为⟨⟨-180°, -80° - ε⟩, ⟨180°, 80° + ε⟩⟩。
 
 <a name="graticule_extentMajor" href="#graticule_extentMajor">#</a> <i>graticule</i>.<b>extentMajor</b>([<i>extent</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-If *extent* is specified, sets the major extent of this graticule. If *extent* is not specified, returns the current major extent, which defaults to ⟨⟨-180°, -90° + ε⟩, ⟨180°, 90° - ε⟩⟩.
+如果指定*extent*，设置此经纬网的主范围。如果未指定*extent*，返回当前主范围，默认为⟨⟨-180°, -90° + ε⟩, ⟨180°, 90° - ε⟩⟩。
 
 <a name="graticule_extentMinor" href="#graticule_extentMinor">#</a> <i>graticule</i>.<b>extentMinor</b>([<i>extent</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-If *extent* is specified, sets the minor extent of this graticule. If *extent* is not specified, returns the current minor extent, which defaults to ⟨⟨-180°, -80° - ε⟩, ⟨180°, 80° + ε⟩⟩.
+如果指定*extent*，设置此经纬网的次范围。如果未指定*extent*，返回当前次范围，默认为⟨⟨-180°, -80° - ε⟩, ⟨180°, 80° + ε⟩⟩。
 
 <a name="graticule_step" href="#graticule_step">#</a> <i>graticule</i>.<b>step</b>([<i>step</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-If *step* is specified, sets the major and minor step for this graticule. If *step* is not specified, returns the current minor step, which defaults to ⟨10°, 10°⟩.
+如果指定了*step*，则设置此经纬网的主step和次step。如果未指定*step*，则返回当前的次step，默认为⟨10°, 10°⟩。
 
 <a name="graticule_stepMajor" href="#graticule_stepMajor">#</a> <i>graticule</i>.<b>stepMajor</b>([<i>step</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-If *step* is specified, sets the major step for this graticule. If *step* is not specified, returns the current major step, which defaults to ⟨90°, 360°⟩.
+如果指定了*step*，则设置此经纬网的主step。如果未指定*step*，则返回当前的主step，默认为⟨90°, 360°⟩。
 
 <a name="graticule_stepMinor" href="#graticule_stepMinor">#</a> <i>graticule</i>.<b>stepMinor</b>([<i>step</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-If *step* is specified, sets the minor step for this graticule. If *step* is not specified, returns the current minor step, which defaults to ⟨10°, 10°⟩.
+如果指定了*step*，则设置此经纬网的次step。如果未指定*step*，则返回当前的次step，默认为⟨10°, 10°⟩。
 
 <a name="graticule_precision" href="#graticule_precision">#</a> <i>graticule</i>.<b>precision</b>([<i>angle</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-If *precision* is specified, sets the precision for this graticule, in degrees. If *precision* is not specified, returns the current precision, which defaults to 2.5°.
+如果指定*precision*，设置此经纬网的精度为指定以度为单位的精度。如果未指定*precision*，则返回当前精度，默认为2.5°。
 
 <a name="geoGraticule10" href="#geoGraticule10">#</a> d3.<b>geoGraticule10</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/graticule.js "Source")
 
-A convenience method for directly generating the default 10° global graticule as a GeoJSON MultiLineString geometry object. Equivalent to:
+一种直接生成10°全球经纬网的GeoJSON MultiLineString几何对象的便捷方法。相当于：
 
 ```js
 function geoGraticule10() {
@@ -559,25 +560,25 @@ function geoGraticule10() {
 }
 ```
 
-### Streams
+### 流
 
-D3 transforms geometry using a sequence of function calls, rather than materializing intermediate representations, to minimize overhead. Streams must implement several methods to receive input geometry. Streams are inherently stateful; the meaning of a [point](#point) depends on whether the point is inside of a [line](#lineStart), and likewise a line is distinguished from a ring by a [polygon](#polygonStart). Despite the name “stream”, these method calls are currently synchronous.
+D3通过调用一系列函数进行几何变换，而不是具体化中间表示以减小开销。流必须实现几种方法来接收输入几何。流本质上是有状态的；一个[点](#point)的含义取决于该点是否在一条[线](#lineStart)的内部，同样一条线与一个[多边形](#polygonStart)的边界分开。尽管名称为“stream”，但这些方法调用目前是同步的。
 
 <a href="#geoStream" name="geoStream">#</a> d3.<b>geoStream</b>(<i>object</i>, <i>stream</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/stream.js "Source")
 
-Streams the specified [GeoJSON](http://geojson.org) *object* to the specified [projection *stream*](#projection-streams). While both features and geometry objects are supported as input, the stream interface only describes the geometry, and thus additional feature properties are not visible to streams.
+将指定的[GeoJSON](http://geojson.org) *object*流式传输到指定的[projection *stream*](#projection-streams)。虽然支持要素和几何体对象作为输入，但流界面仅描述几何体，因此流不可见其他要素属性。
 
 <a name="stream_point" href="#stream_point">#</a> <i>stream</i>.<b>point</b>(<i>x</i>, <i>y</i>[, <i>z</i>])
 
-Indicates a point with the specified coordinates *x* and *y* (and optionally *z*). The coordinate system is unspecified and implementation-dependent; for example, [projection streams](https://github.com/d3/d3-geo-projection) require spherical coordinates in degrees as input. Outside the context of a polygon or line, a point indicates a point geometry object ([Point](http://www.geojson.org/geojson-spec.html#point) or [MultiPoint](http://www.geojson.org/geojson-spec.html#multipoint)). Within a line or polygon ring, the point indicates a control point.
+表示具有指定坐标*x*和*y*（以及可选*z*）的点。坐标系未指定且与实现相关；例如，[projection streams](https://github.com/d3/d3-geo-projection)需要以度为单位的球面坐标作为输入。在一个多边形或线的上下文之外，一个点表示一个点几何对象（[点](http://www.geojson.org/geojson-spec.html#point)或[多点](http://www.geojson.org/geojson-spec.html#multipoint)）。在线或多边形边界，该点表示控制点。
 
 <a name="stream_lineStart" href="#stream_lineStart">#</a> <i>stream</i>.<b>lineStart</b>()
 
-Indicates the start of a line or ring. Within a polygon, indicates the start of a ring. The first ring of a polygon is the exterior ring, and is typically clockwise. Any subsequent rings indicate holes in the polygon, and are typically counterclockwise.
+表示线或多边形边界的开始。在多边形内，表示多边形边界的开始。多边形的第一个环是外环，通常是顺时针的。任何后续边界表示多边形中的岛，并且通常是逆时针方向。
 
 <a name="stream_lineEnd" href="#stream_lineEnd">#</a> <i>stream</i>.<b>lineEnd</b>()
 
-Indicates the end of a line or ring. Within a polygon, indicates the end of a ring. Unlike GeoJSON, the redundant closing coordinate of a ring is *not* indicated via [point](#point), and instead is implied via lineEnd within a polygon. Thus, the given polygon input:
+表示线或多边形边界的结束。在多边形内，表示多边形边界的结束。与GeoJSON不同，多边形边界的冗余闭合坐标*不是*通过[点](#point)指示的，而是通过多边形内的lineEnd隐含。因此，给定的多边形输入：
 
 ```json
 {
@@ -588,7 +589,7 @@ Indicates the end of a line or ring. Within a polygon, indicates the end of a ri
 }
 ```
 
-Will produce the following series of method calls on the stream:
+将在流上产生以下一系列方法调用：
 
 ```js
 stream.polygonStart();
@@ -603,23 +604,23 @@ stream.polygonEnd();
 
 <a name="stream_polygonStart" href="#stream_polygonStart">#</a> <i>stream</i>.<b>polygonStart</b>()
 
-Indicates the start of a polygon. The first line of a polygon indicates the exterior ring, and any subsequent lines indicate interior holes.
+表示多边形的开始。多边形的第一行表示外环，任何后续行表示内部岛。
 
 <a name="stream_polygonEnd" href="#stream_polygonEnd">#</a> <i>stream</i>.<b>polygonEnd</b>()
 
-Indicates the end of a polygon.
+表示多边形的结尾。
 
 <a name="stream_sphere" href="#stream_sphere">#</a> <i>stream</i>.<b>sphere</b>()
 
-Indicates the sphere (the globe; the unit sphere centered at ⟨0,0,0⟩).
+表示球体（地球；单位球体以⟨0,0,0⟩为中心）。
 
-### Transforms
+### 变换
 
-Transforms are a generalization of projections. Transform implement [*projection*.stream](#projection_stream) and can be passed to [*path*.projection](#path_projection). However, they only implement a subset of the other projection methods, and represent arbitrary geometric transformations rather than projections from spherical to planar coordinates.
+变换是投影的一般化。转换实现[*projection*.stream](#projection_stream)并可以传递给[*path*.projection](#path_projection)。然而，它们仅实现其他投影方法的子集，并且表示任意几何变换而不是从球面到平面坐标的投影。
 
 <a href="#geoTransform" name="geoTransform">#</a> d3.<b>geoTransform</b>(<i>methods</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/transform.js "Source")
 
-Defines an arbitrary transform using the methods defined on the specified *methods* object. Any undefined methods will use pass-through methods that propagate inputs to the output stream. For example, to reflect the *y*-dimension (see also [*identity*.reflectY](#identity_reflectY)):
+使用在指定*methods*对象上定义的方法，定义任意变换。任何未定义的方法都将使用将输入传送到输出流的传递方法。例如，要将*y*反射（原文：to reflect the *y*-dimension）（另请参见[*identity*.reflectY](#identity_reflectY)）：
 
 ```js
 var reflectY = d3.geoTransform({
@@ -629,7 +630,7 @@ var reflectY = d3.geoTransform({
 });
 ```
 
-Or to define an affine matrix transformation:
+或者定义仿射矩阵变换：
 
 ```js
 function matrix(a, b, c, d, tx, ty) {
@@ -643,42 +644,43 @@ function matrix(a, b, c, d, tx, ty) {
 
 <a href="#geoIdentity" name="geoIdentity">#</a> d3.<b>geoIdentity</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/identity.js "Source")
 
-The identity transform can be used to scale, translate and clip planar geometry. It implements [*projection*.scale](#projection_scale), [*projection*.translate](#projection_translate), [*projection*.fitExtent](#projection_fitExtent), [*projection*.fitSize](#projection_fitSize), [*projection*.fitWidth](#projection_fitWidth), [*projection*.fitHeight](#projection_fitHeight) and [*projection*.clipExtent](#projection_clipExtent).
+特征变换可用于缩放，平移和剪裁平面几何体。它实现了[*projection*.scale](#projection_scale)，[*projection*.translate](#projection_translate)，[*projection*.fitExtent](#projection_fitExtent)，[*projection*.fitSize](#projection_fitSize)，[*projection*.fitWidth](#projection_fitWidth)，[*projection*.fitHeight](#projection_fitHeight)和[*projection*.clipExtent](#projection_clipExtent)。
 
 <a href="#identity_reflectX" name="identity_reflectX">#</a> <i>identity</i>.<b>reflectX</b>([<i>reflect</i>])
 
-If *reflect* is specified, sets whether or not the *x*-dimension is reflected (negated) in the output. If *reflect* is not specified, returns true if *x*-reflection is enabled, which defaults to false.
+如果指定了*reflect*，则设置*x*否在输出中反射（变为相反数）。如果未指定*reflect*，则在启用*x*反射时返回true ，默认为false。
 
 <a href="#identity_reflectY" name="identity_reflectY">#</a> <i>identity</i>.<b>reflectY</b>([<i>reflect</i>])
 
-If *reflect* is specified, sets whether or not the *y*-dimension is reflected (negated) in the output. If *reflect* is not specified, returns true if *y*-reflection is enabled, which defaults to false. This is especially useful for transforming from standard [spatial reference systems](https://en.wikipedia.org/wiki/Spatial_reference_system), which treat positive *y* as pointing up, to display coordinate systems such as Canvas and SVG, which treat positive *y* as pointing down.
+如果指定了*reflect*，则设置*y*否在输出中反射（变为相反数）。如果未指定*reflect*，则在启用*y*反射时返回true ，默认为false。这对于从标准[空间参考系统](https://en.wikipedia.org/wiki/Spatial_reference_system)进行转换特别有用，该系统将正*y*视为向上，显示坐标系统诸如使用Canvas和SVG将正*y*y视为向下。
 
-### Clipping
+### 剪裁
 
-Projections perform cutting or clipping of geometries in two stages.
+投影分两个阶段进行几何形状的切割或裁剪。
 
 <a name="preclip" href="#preclip">#</a> <i>preclip</i>(<i>stream</i>)
 
-Pre-clipping occurs in geographic coordinates. Cutting along the antimeridian line, or clipping along a small circle are the most common strategies.
+预剪裁发生在地理坐标中。沿着反面子午线线切割，或沿着小圆裁剪是最常见的策略。
 
-See [*projection*.preclip](#projection_preclip).
+参见[*projection*.preclip](#projection_preclip).
 
 <a name="postclip" href="#postclip">#</a> <i>postclip</i>(<i>stream</i>)
 
-Post-clipping occurs on the plane, when a projection is bounded to a certain extent such as a rectangle.
+后剪裁发生在平面，当投影被限制到某个范围（例如矩形）时。
 
-See [*projection*.postclip](#projection_postclip).
+参见[*projection*.postclip](#projection_postclip).
 
-Clipping functions are implemented as transformations of a [projection stream](#streams). Pre-clipping operates on spherical coordinates, in radians. Post-clipping operates on planar coordinates, in pixels.
+裁剪函数被实现为[projection stream](#streams)的转换。预裁剪在以弧度为单位的球面坐标上进行操作。后裁剪在以像素为单位的平面坐标上操作。
 
 <a name="geoClipAntimeridian" href="#geoClipAntimeridian">#</a> d3.<b>geoClipAntimeridian</b>
 
-A clipping function which transforms a stream such that geometries (lines or polygons) that cross the antimeridian line are cut in two, one on each side. Typically used for pre-clipping.
+裁剪函数，其对流进行变换，使得穿过反面子午线的几何形状（线或多边形）被切成两个，每边一个。通常用于预裁剪。
 
 <a name="geoClipCircle" href="#geoClipCircle">#</a> d3.<b>geoClipCircle</b>(<i>angle</i>)
 
-Generates a clipping function which transforms a stream such that geometries are bounded by a small circle of radius *angle* around the projection’s [center](#projection_center). Typically used for pre-clipping.
+生成裁剪函数，该剪切函数对流进行变换，使得几何体限定在由围绕投影[中心](#projection_center)的半径*angle*的小圆圈内。通常用于预裁剪。
 
 <a name="geoClipRectangle" href="#geoClipRectangle">#</a> d3.<b>geoClipRectangle</b>(<i>x0</i>, <i>y0</i>, <i>x1</i>, <i>y1</i>)
 
-Generates a clipping function which transforms a stream such that geometries are bounded by a rectangle of coordinates [[<i>x0</i>, <i>y0</i>], [<i>x1</i>, <i>y1</i>]]. Typically used for post-clipping.
+生成裁剪函数，该剪切函数转换流，使得几何图形限定在坐标[[<i>x0</i>, <i>y0</i>], [<i>x1</i>, <i>y1</i>]]的矩形内。通常用于后裁剪。
+
