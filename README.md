@@ -58,19 +58,19 @@ var projection = d3.geoEqualEarth(),
 
 <a href="#_path" name="_path">#</a> <i>path</i>(<i>object</i>[, <i>arguments…</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-渲染指定*object*，可以是任何GeoJSON要素或几何对象：
+渲染指定*object*，可以是任何GeoJSON要素或几何对象：（译者注：参看http://geojson.org/geojson-spec.html#geometry-objects）
 
 * Point - 单个点。
 * MultiPoint - 点数组。
-* LineString - 连续的线的点的数组。
-* MultiLineString - 多条线的点的二维数组。
-* Polygon - 多边形点的二维数组 （也许有岛）。
-* MultiPolygon - 多个多边形的多维数组。
+* LineString - 组成线的点的数组。
+* MultiLineString - LineString的数组。
+* Polygon - 组成多边形点的二维数组 （也许有岛）。
+* MultiPolygon - Polygon的数组。
 * GeometryCollection - 几何对象的数组。
 * Feature - 要素是上面任意一种几何对象。
 * FeatureCollection - 要素的数组。
 
-用于渲染球体轮廓的*Sphere*类型也支持，sphere没有坐标。额外的*arguments*沿着[pointRadius](#path_pointRadius)存取器传递。（原文：Any additional *arguments* are passed along to the [pointRadius](#path_pointRadius) accessor.）
+用于渲染球体轮廓的*Sphere*类型也支持，sphere没有坐标。*arguments*将沿着[pointRadius](#path_pointRadius)存取器传递。（原文：Any additional *arguments* are passed along to the [pointRadius](#path_pointRadius) accessor.）
 
 将多个要素打包到要素集生成一个path进行展示：
 
@@ -116,7 +116,7 @@ The null projection represents the identity transformation）：输入几何不�
 
 <a href="#path_context" name="path_context">#</a> <i>path</i>.<b>context</b>([<i>context</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
-如果指定了*context*，则设置当前渲染的上下文并返回[路径生成器](#_path)。如果上下文为null，则路径生成器将返回SVG路径字符串；如果上下文为非null，则路径生成器将调用指定上下文中的方法来渲染几何体。上下文必须实现[CanvasRenderingContext2D API](https://www.w3.org/TR/2dcontext/#canvasrenderingcontext2d)的子集：
+如果指定了*context*，则设置当前渲染的context（译者注：以下context都是指Canvas调用getContext方法获取到的context）并返回[路径生成器](#_path)。如果context为null，则路径生成器将返回SVG路径字符串；如果context为非null，则路径生成器将调用指定context中的方法来渲染几何体。context必须实现[CanvasRenderingContext2D API](https://www.w3.org/TR/2dcontext/#canvasrenderingcontext2d)的子集：
 
 * *context*.beginPath()
 * *context*.moveTo(*x*, *y*)
@@ -124,7 +124,7 @@ The null projection represents the identity transformation）：输入几何不�
 * *context*.arc(*x*, *y*, *radius*, *startAngle*, *endAngle*)
 * *context*.closePath()
 
-如果未指定*context*，则返回当前渲染的上下文，它的默认值为null。
+如果未指定*context*，则返回当前渲染的context，它的默认值为null。
 
 <a href="#path_pointRadius" name="path_pointRadius">#</a> <i>path</i>.<b>pointRadius</b>([<i>radius</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/path/index.js "Source")
 
@@ -157,7 +157,7 @@ The null projection represents the identity transformation）：输入几何不�
 
 <a href="#projection_preclip" name="projection_preclip">#</a> <i>projection</i>.<b>preclip</b>([<i>preclip</i>])
 
-如果指定了*preclip*，则将投影的球面剪裁设置为指定的函数并返回投影。如果未指定*preclip*，则返回当前的球面剪裁功能（请参阅[preclip](#preclip)）。
+如果指定了*preclip*，则将投影的球面剪裁设置为指定的函数并返回投影。如果未指定*preclip*，则返回当前的球面剪裁函数（请参阅[preclip](#preclip)）。
 
 <a href="#projection_postclip" name="projection_postclip">#</a> <i>projection</i>.<b>postclip</b>([<i>postclip</i>])
 
@@ -185,7 +185,7 @@ The null projection represents the identity transformation）：输入几何不�
 
 <a href="#projection_center" name="projection_center">#</a> <i>projection</i>.<b>center</b>([<i>center</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-如果指定了*center*，则将投影的中心设置为指定的以度为单位的经度和纬度的双元素数组*center*，并返回投影。如果未指定*center*，则返回当前中心，默认为⟨0°，0°⟩。
+如果指定了*center*，则将投影的中心设置为指定的以度为单位的经度和纬度的双元素数组*center*，并返回投影。如果未指定*center*，则返回当前中心，默认为⟨0°,0°⟩。
 
 <a href="#projection_angle" name="projection_angle">#</a> <i>projection</i>.<b>angle</b>([<i>angle</i>]) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
@@ -361,11 +361,11 @@ Albers的等积圆锥投影。另见[*conic*.parallels](#conic_parallels)。
 
 ### 原始投影
 
-原始投影是用于实现自定义投影的点变换函数；它们通常传递给[d3.geoProjection](#geoProjection)或[d3.geoProjectionMutator](#geoProjectionMutator)。暴露出来原始投影用来衍生相关投影。原始投影以弧度（不是角度！）取球面坐标\[*lambda*, *phi*\]并返回点\[*x*, *y*\]，通常在以原点为中心的单位正方形中。（原文：typically in the unit square centered around the origin.）
+原始投影是用于实现自定义投影的点变换函数；它们通常传递给[d3.geoProjection](#geoProjection)或[d3.geoProjectionMutator](#geoProjectionMutator)。暴露出来原始投影用来衍生相关投影。原始投影以弧度（不是角度！）取球面坐标\[*lambda*, *phi*\]并返回点\[*x*, *y*\]，返回的点一般落在单位方形中心为原点的区域中。（原文：typically in the unit square centered around the origin.）
 
 <a href="#_project" name="_project">#</a> <i>project</i>(<i>lambda</i>, <i>phi</i>)
 
-投影以弧度表示的指定点[<i>lambda</i>, <i>phi</i>]，在无单位坐标中返回新点\[*x*, *y*\]。
+投影以弧度表示的指定点[<i>lambda</i>, <i>phi</i>]，返回新点的无量纲的坐标\[*x*, *y*\]。
 
 <a href="#project_invert" name="project_invert">#</a> <i>project</i>.<b>invert</b>(<i>x</i>, <i>y</i>)
 
@@ -373,7 +373,7 @@ Albers的等积圆锥投影。另见[*conic*.parallels](#conic_parallels)。
 
 <a href="#geoProjection" name="geoProjection">#</a> d3.<b>geoProjection</b>(<i>project</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-构建一个新投影从指定[原始投影](#_project)的*project*。该*project*函数采用以[弧度](http://mathworld.wolfram.com/Radian.html)表示的*longitude*和*latitude*，通常被称为*lambda* (λ)和*phi* (φ)，并返回数组\[*x*, *y*\]表示其单元投影。（原文：and returns a two-element array \[*x*, *y*\] representing its unit projection.）*project*函数不需要缩放和平移这个点，因为会自动应用[*projection*.scale](#projection_scale)、[*projection*.translate](#projection_translate)和[*projection*.center](#projection_center)。同样，*project*函数不需要执行任何球面旋转，因为在投影之前已经应用[*projection*.rotate](#projection_rotate)。
+使用指定的[原始投影](#_project)*project*构建一个新投影。该*project*函数的参数为[弧度](http://mathworld.wolfram.com/Radian.html)表示的*longitude*和*latitude*，通常被称为*lambda* (λ)和*phi* (φ)，并返回数组\[*x*, *y*\]表示其单位投影。*project*函数不需要缩放和平移这个点，因为会自动应用[*projection*.scale](#projection_scale)、[*projection*.translate](#projection_translate)和[*projection*.center](#projection_center)。同样，*project*函数不需要执行任何球面旋转，因为在投影之前已经应用[*projection*.rotate](#projection_rotate)。
 
 例如，球形墨卡托投影可以这样实现：
 
@@ -387,7 +387,7 @@ var mercator = d3.geoProjection(function(x, y) {
 
 <a href="#geoProjectionMutator" name="geoProjectionMutator">#</a> d3.<b>geoProjectionMutator</b>(<i>factory</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-构建一个新投影从指定[原始投影](#_project)的*factory*，并返回一个当原始投影发生变化时调用的*mutate*函数。指定的*factory*必须返回一个原始的投影。返回的*mutate*函数的返回值是包装后的投影。例如，圆锥投影通常具有两条可配置的平行线。一个合适的*factory*函数，如[d3.geoConicEqualAreaRaw](#geoConicEqualAreaRaw)，将具有以下形式：
+使用指定的[原始投影](#_project)*factory*构建一个新投影，并返回一个当原始投影发生变化时调用的*mutate*函数。指定的*factory*必须返回一个原始的投影。返回的*mutate*函数的返回值是包装后的投影。例如，圆锥投影通常具有两条可配置的平行线。一个合适的*factory*函数，如[d3.geoConicEqualAreaRaw](#geoConicEqualAreaRaw)，将具有以下形式：
 
 ```js
 // y0 and y1 represent two parallels
