@@ -70,7 +70,7 @@ var projection = d3.geoEqualEarth(),
 * Feature - 要素是上面任意一种几何对象。
 * FeatureCollection - 要素的数组。
 
-用于渲染球体轮廓的*Sphere*类型也支持，sphere没有坐标。*arguments*将沿着[pointRadius](#path_pointRadius)存取器传递。（原文：Any additional *arguments* are passed along to the [pointRadius](#path_pointRadius) accessor.）
+用于渲染球体轮廓的*Sphere*类型也支持，sphere没有坐标。调用path携带的参数将传递给[pointRadius](#path_pointRadius)。（原文：Any additional *arguments* are passed along to the [pointRadius](#path_pointRadius) accessor.）
 
 将多个要素打包到要素集生成一个path进行展示：
 
@@ -147,7 +147,7 @@ The null projection represents the identity transformation）：输入几何不�
 
 <a href="#projection_invert" name="projection_invert">#</a> <i>projection</i>.<b>invert</b>(<i>point</i>) [<>](https://github.com/d3/d3-geo/blob/master/src/projection/index.js "Source")
 
-以度为单位返回一个以度为单位的新数组\[*longitude*, *latitude*\]，表示指定投影*point*的未投影点。该点必须指定为双元素数组\[*x*, *y*\]（通常以像素为单位）。如果指定的*point*没有定义的投影位置，例如当该点位于该投影的剪切边界之外时，将返回null 。
+返回一个以度为单位的新数组\[*longitude*, *latitude*\]，表示指定已投影*point*的未投影点。该点必须指定为双元素数组\[*x*, *y*\]（通常以像素为单位）。如果指定的*point*没有定义的投影位置，例如当该点位于该投影的剪切边界之外时，将返回null 。
 
 该方法仅定义在可逆投影上。
 
@@ -260,7 +260,7 @@ gnomonic投影。
 
 [<img src="https://raw.githubusercontent.com/d3/d3-geo/master/img/orthographic.png" width="480" height="250">](https://bl.ocks.org/mbostock/3757125)
 
-正交投影。
+正射投影（直角投影）。
 
 <a href="#geoStereographic" name="geoStereographic">#</a> d3.<b>geoStereographic</b>() [<>](https://github.com/d3/d3-geo/blob/master/src/projection/stereographic.js "Source")
 <br><a href="#geoStereographicRaw" name="geoStereographicRaw">#</a> d3.<b>geoStereographicRaw</b>
