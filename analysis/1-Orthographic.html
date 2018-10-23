@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+
+<body>
+  <canvas id="map" width="300" height="300"></canvas>
+  <script src="https://cdn.bootcss.com/d3/5.7.0/d3.js"></script>
+  <script src="https://cdn.bootcss.com/topojson/3.0.2/topojson.js"></script>
+  <div>
+    <div>
+      <h3>d3.geoOrthographic</h3>
+      <pre>
+        <em>%d3-geo%\src\index.js</em>
+        <code>
+          export {default as geoOrthographic, orthographicRaw as geoOrthographicRaw} from "./projection/orthographic";
+        </code>
+        <strong>
+          geoOrthographic的源码在./projection/orthographic这个文件里
+        </strong>
+        
+        <em>%d3-geo%\src\projection\orthographic.js</em>
+        <code>
+          import {asin, cos, epsilon, sin} from "../math";
+          import {azimuthalInvert} from "./azimuthal";
+          import projection from "./index";
+
+          export function orthographicRaw(x, y) {
+            return [cos(y) * sin(x), sin(y)];
+          }
+
+          orthographicRaw.invert = azimuthalInvert(asin);
+
+          export default function() {
+            return projection(orthographicRaw)
+                .scale(249.5)
+                .clipAngle(90 + epsilon);
+          }
+        </code>
+        <strong>
+          https://en.wikipedia.org/wiki/Orthographic_projection_in_cartography
+          看这个公式应该是取<em>lambda0</em>为0，<em>phi0</em>为0
+        </strong>
+      </pre>
+    </div>
+    <hr>
+    <div>
+      <h3>projection.xxx</h3>
+      <pre>
+        <em>%d3-geo%\src\projection\index.js</em>
+        <code>
+          import {fitExtent, fitSize, fitWidth, fitHeight} from "./fit";
+          import resample from "./resample";
+
+          projection.rotate = function(_) {
+            return arguments.length ? (deltaLambda = _[0] % 360 * radians, deltaPhi = _[1] % 360 * radians, deltaGamma = _.length > 2 ? _[2] % 360 * radians : 0, recenter()) : [deltaLambda * degrees, deltaPhi * degrees, deltaGamma * degrees];
+          };
+          projection.translate = function(_) {
+            return arguments.length ? (x = +_[0], y = +_[1], recenter()) : [x, y];
+          };
+          projection.fitExtent = function(extent, object) {
+            return fitExtent(projection, extent, object);
+          };
+          projection.precision = function(_) {
+            return arguments.length ? (projectResample = resample(projectTransform, delta2 = _ * _), reset()) : sqrt(delta2);
+          };
+        </code>
+        <strong>
+          rotate和translate都是如果传入正确的参数，就重新计算投影相关的变量；
+          fitExtent会去调用fitExtent方法（下面有源码）；
+          precision如果传入正确的参数，就会调用resample重采样（源码在%d3-geo%\src\projection\resample.js里）
+        </strong>
+
+        <em>%d3-geo%\src\projection\fit.js</em>
+        <code>
+          export function fitExtent(projection, extent, object) {
+            return fit(projection, function(b) {
+              var w = extent[1][0] - extent[0][0],
+                  h = extent[1][1] - extent[0][1],
+                  k = Math.min(w / (b[1][0] - b[0][0]), h / (b[1][1] - b[0][1])),
+                  x = +extent[0][0] + (w - k * (b[1][0] + b[0][0])) / 2,
+                  y = +extent[0][1] + (h - k * (b[1][1] + b[0][1])) / 2;
+              projection.scale(150 * k).translate([x, y]);
+            }, object);
+          }
+        </code>
+        <strong>
+          根据extent的设置缩放和平移，实现在该范围铺满显示
+        </strong>
+      </pre>
+    </div>
+    <hr>
+    <div>
+      <h3>d3.geoPath</h3>
+      <pre>
+        <em>%d3-geo%\src\index.js</em>
+        <code>
+          export {default as geoPath} from "./path/index";
+        </code>
+        <strong>
+          geoPath的源码在./path/index这个文件里
+        </strong>
+        
+        <em>%d3-geo%\src\path\index.js</em>
+        <code>
+          export default function(projection, context) {
+            var pointRadius = 4.5,
+                projectionStream,
+                contextStream;
+
+            function path(object) {
+              if (object) {
+                if (typeof pointRadius === "function") contextStream.pointRadius(+pointRadius.apply(this, arguments));
+                stream(object, projectionStream(contextStream));
+              }
+              return contextStream.result();
+            }
+
+            path.projection = function(_) {
+              return arguments.length ? (projectionStream = _ == null ? (projection = null, identity) : (projection = _).stream, path) : projection;
+            };
+
+            path.context = function(_) {
+              if (!arguments.length) return context;
+              contextStream = _ == null ? (context = null, new PathString) : new PathContext(context = _);
+              if (typeof pointRadius !== "function") contextStream.pointRadius(pointRadius);
+              return path;
+            };
+            
+            return path.projection(projection).context(context);
+          }
+        </code>
+        <strong>
+          geoPath传入projection, context参数（使用canvas时要设置context参数），然后一顿设置，最后返回一个需要传入参数object的函数
+        </strong>
+      </pre>
+    </div>
+    <hr>
+    <div>
+      <h3>path()</h3>
+      <pre>
+        <em>%d3-geo%\src\path\index.js</em>
+        <code>
+          import stream from "../stream";
+
+          function path(object) {
+            if (object) {
+              if (typeof pointRadius === "function") contextStream.pointRadius(+pointRadius.apply(this, arguments));
+              stream(object, projectionStream(contextStream));
+            }
+            return contextStream.result();
+          }
+        </code>
+        <strong>
+          还是上面的那个文件，这里看那一下path这个函数：
+          首先先判断pointRadius是不是函数，是的话将path这个函数的参数全传递给pointRadius（还记得文档里的“being passed the any arguments passed to the [path generator](#_path)”么）；
+          然后调用stream就在当前canvas的context中绘制出这个对象了（这里很复杂，以后单开一块写吧）；
+          最后调用了个空方法，不知有何用意
+        </strong>
+      </pre>
+    </div>
+  </div>
+
+  <script>
+    var context = document.querySelector("#map").getContext("2d"),
+      projection = d3.geoOrthographic()
+      .rotate([-125, -33, 0])
+      .translate([300 / 2, 300 / 2])
+      .fitExtent([
+        [1, 1],
+        [300 - 1, 300 - 1]
+      ], {
+        type: "Sphere"
+      })
+      .precision(0.1),
+      path = d3.geoPath(projection, context),
+      graticule = d3.geoGraticule10();
+
+    fetch("https://unpkg.com/world-atlas@1/world/50m.json").then(response => response.json())
+      .then(world => {
+        let land = topojson.feature(world, world.objects.land);
+        context.beginPath(), path(graticule), context.strokeStyle = "#ccc", context.stroke();
+        context.beginPath(), path(land), context.fill();
+        context.beginPath(), path({
+          type: "Sphere"
+        }), context.strokeStyle = "#000", context.stroke();
+      });
+  </script>
+</body>
+
+</html>

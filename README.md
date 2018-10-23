@@ -39,16 +39,16 @@ var projection = d3.geoEqualEarth(),
 
 ## API 参考
 
-* [Paths](#paths)
-* [Projections](#projections) ([Azimuthal](#azimuthal-projections), [Composite](#composite-projections), [Conic](#conic-projections), [Cylindrical](#cylindrical-projections))
-* [Raw Projections](#raw-projections)
-* [Spherical Math](#spherical-math)
-* [Spherical Shapes](#spherical-shapes)
-* [Streams](#streams)
-* [Transforms](#transforms)
-* [Clipping](#clipping)
+* [路径](#路径)
+* [投影](#投影) ([方位投影](#方位投影), [复合投影](#复合投影), [圆锥投影](#圆锥投影), [圆柱投影](#圆柱投影))
+* [原始投影](#原始投影)
+* [球面数学](#球面数学)
+* [球形](#球形)
+* [流](#流)
+* [变换](#变换)
+* [裁剪](#裁剪)
 
-### Paths
+### 路径
 
 [d3.geoPath](#geoPath)是一个类似形状生成器[d3-shape](https://github.com/d3/d3-shape)的地理路径生成器：它可以由指定GeoJSON几何体或要素对象生成SVG路径数据字符串或[渲染Canvas的路径](https://bl.ocks.org/mbostock/3783604)。动态或交互的投影建议使用Canvas以提高性能。路径可以与[projections](#projections)或者[transforms](#transforms)一起使用，也可以将平面几何体直接渲染到Canvas或SVG。
 
@@ -130,7 +130,7 @@ The null projection represents the identity transformation）：输入几何不�
 
 如果*radius*指定，设置用于显示Point和MultiPoint半径为指定值。如果未指定*radius*，则返回当前半径访问器，默认值为4.5。虽然半径通常被指定为数字常量，但它也可以被指定为为每个要素进行计算的函数，这个函数可以获取到[path generator](#_path)的全部参数（原文：being passed the any arguments passed to the [path generator](#_path)）。例如，如果您的GeoJSON数据具有附加属性，则可以访问这些属性在pointRadius指定的函数中来改变点大小；或者，您可以使用[d3.symbol](https://github.com/d3/d3-shape#symbols)和[projection](#geoProjection)这两种更加灵活的方式。
 
-### Projections
+### 投影
 
 投影将球面多边形几何体转换为平面多边形几何体。D3提供了如下几类标准投影的实现：
 
@@ -654,7 +654,7 @@ function matrix(a, b, c, d, tx, ty) {
 
 如果指定了*reflect*，则设置*y*否在输出中反射（变为相反数）。如果未指定*reflect*，则在启用*y*反射时返回true ，默认为false。这对于从标准[空间参考系统](https://en.wikipedia.org/wiki/Spatial_reference_system)进行转换特别有用，该系统将正*y*视为向上，显示坐标系统诸如使用Canvas和SVG将正*y*y视为向下。
 
-### 剪裁
+### 裁剪
 
 投影分两个阶段进行几何形状的切割或裁剪。
 
